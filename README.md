@@ -1,2 +1,2 @@
 # My-Cleo-source-code
-本人的部分CLEO源码
+本人和朋友的部分CLEO源码

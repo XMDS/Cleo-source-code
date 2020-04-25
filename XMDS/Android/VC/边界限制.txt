@@ -1,0 +1,58 @@
+{$CLEO .csa}
+0000:
+//World
+0DD9: write_mem_addr 0x0017B3C0 value -65535.0 size 4 add_ib 1 protect 1 //-2400.0
+0DD9: write_mem_addr 0x0017B3C4 value 65535.0 size 4 add_ib 1 protect 1 //1600.0
+0DD9: write_mem_addr 0x0017B3C8 value -65336.0 size 4 add_ib 1 protect 1 //-2000.0
+0DD9: write_mem_addr 0x0017B3CC value 65535.0 size 4 add_ib 1 protect 1 //2000.0
+
+//Corona
+0DD9: write_mem_addr 0x001C5BDC value -65535.0 size 4 add_ib 1 protect 1 //-2400.0
+0DD9: write_mem_addr 0x001C5BE0 value 65535.0 size 4 add_ib 1 protect 1 //1600.0
+0DD9: write_mem_addr 0x001C5BE4 value -65535.0 size 4 add_ib 1 protect 1 //-2000.0
+0DD9: write_mem_addr 0x001C5BE8 value 65535.0 size 4 add_ib 1 protect 1 //2000.0
+
+//Heli
+0DD9: write_mem_addr 0x0023FD50 value -65535.0 size 4 add_ib 1 protect 1 //-2400.0
+0DD9: write_mem_addr 0x0023FD54 value 65535.0 size 4 add_ib 1 protect 1 //1600.0
+0DD9: write_mem_addr 0x0023FD5C value -65535.0 size 4 add_ib 1 protect 1 //-2000.0
+0DD9: write_mem_addr 0x0023FD60 value 65535.0 size 4 add_ib 1 protect 1 //2000.0
+
+//Bullet
+0DD9: write_mem_addr 0x0024FAAC value -65535.0 size 4 add_ib 1 protect 1 //-2400.0
+0DD9: write_mem_addr 0x0024FAB0 value 65535.0 size 4 add_ib 1 protect 1 //1600.0
+0DD9: write_mem_addr 0x0024FAB4 value -65535.0 size 4 add_ib 1 protect 1 //-2000.0
+0DD9: write_mem_addr 0x0024FAB8 value 65535.0 size 4 add_ib 1 protect 1 //2000.0
+
+//Car
+0DD9: write_mem_addr 0x00225FCC value 65535.0 size 4 add_ib 1 protect 1 //1550.0
+0DD9: write_mem_addr 0x00225FD0 value 65535.0 size 4 add_ib 1 protect 1 //1950.0
+0DD9: write_mem_addr 0x002264B0 value -65535.0 size 4 add_ib 1 protect 1 //-1950.0
+0DD9: write_mem_addr 0x002264C0 value -65535.0 size 4 add_ib 1 protect 1 //-2350.0
+
+//Boat
+0DD9: write_mem_addr 0x00235B98 value 65535.0 size 4 add_ib 1 protect 1 //1500.0
+0DD9: write_mem_addr 0x00235B9C value -65535.0 size 4 add_ib 1 protect 1 //-2300.0
+0DD9: write_mem_addr 0x00235BA0 value 65535.0 size 4 add_ib 1 protect 1 //1900.0
+0DD9: write_mem_addr 0x00235BA4 value -65535.0 size 4 add_ib 1 protect 1 //-1900.0
+
+//projectile
+0DD9: write_mem_addr 0x002525F0 value -65535.0 size 4 add_ib 1 protect 1 //-2390.0
+0DD9: write_mem_addr 0x002525F4 value 65535.0 size 4 add_ib 1 protect 1 //1590.0
+0DD9: write_mem_addr 0x002525F8 value -65535.0 size 4 add_ib 1 protect 1 //-1990.0
+0DD9: write_mem_addr 0x002525FC value 65535.0 size 4 add_ib 1 protect 1 //1990.0
+
+//RemoveFallen
+0DD9: write_mem_addr 0x00178E70 value -65535.0 size 4 add_ib 1 protect 1 //peds -100.0 
+0DD9: write_mem_addr 0x00178FC4 value -65535.0 size 4 add_ib 1 protect 1 //cars -100.0
+
+//Water
+0DD9: write_mem_addr 0x0024CDAC value 10000.0 size 4 add_ib 1 protect 1 //1200.0
+0DD9: write_mem_addr 0x0024D474 value 10000.0 size 4 add_ib 1 protect 1
+0DD9: write_mem_addr 0x0024EAE8 value 10000.0 size 4 add_ib 1 protect 1
+0DD9: write_mem_addr 0x0024F42C value 10000.0 size 4 add_ib 1 protect 1
+0DD9: write_mem_addr 0x0024D46C value 10000.0 size 4 add_ib 1 protect 1 //2000.0
+0DD9: write_mem_addr 0x0024E668 value 10000.0 size 4 add_ib 1 protect 1
+0DD9: write_mem_addr 0x0024E684 value 20480.0 size 4 add_ib 1 protect 1 //1280.0
+0DD9: write_mem_addr 0x0024EAC4 value 20480.0 size 4 add_ib 1 protect 1
+004E:

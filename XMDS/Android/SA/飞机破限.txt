@@ -1,0 +1,72 @@
+{$CLEO .csa}
+0000:
+//GTASA
+//1.00 = 0x004CCB40
+//1.02 = 0x004CCCA8
+//1.03 = 0x004CCA08
+//1.05 = 0x004CA060
+//1.06 = 0x00512AF0
+//1.07 = 0x00512F98 
+//1.08 = 0x00510D60
+//2.00 = 0x00585674 0x00585678
+//By: China.XMDS
+//Emil: 2841824304@qq.com
+//2020.02.10
+0DD6: 0@ = get_game_version
+if
+ 0@ == 3 //1.00
+jf @1
+0DD9: write_mem_addr 0x004CCB40 value 800000.0 size 4 add_ib 1 protect 1
+jump @end 
+
+:1
+if
+ 0@ == 5 //1.02
+jf @2 
+0DD9: write_mem_addr 0x004CCCA8 value 800000.0 size 4 add_ib 1 protect 1
+jump @end
+
+:2
+if
+ 0@ == 6 //1.03
+jf @3 
+0DD9: write_mem_addr 0x004CCA08 value 800000.0 size 4 add_ib 1 protect 1
+jump @end
+
+:3
+if
+ 0@ == 7 //1.05
+jf @4 
+0DD9: write_mem_addr 0x004CA060 value 800000.0 size 4 add_ib 1 protect 1
+jump @end
+
+:4
+if
+ 0@ == 8 //1.06
+jf @5 
+0DD9: write_mem_addr 0x00512AF0 value 800000.0 size 4 add_ib 1 protect 1
+jump @end
+
+:5
+if
+ 0@ == 10 //1.07
+jf @6 
+0DD9: write_mem_addr 0x00512F98 value 800000.0 size 4 add_ib 1 protect 1
+jump @end
+
+:6
+if
+ 0@ == 13 //1.08
+jf @7 
+0DD9: write_mem_addr 0x00510D60 value 800000.0 size 4 add_ib 1 protect 1
+jump @end
+
+:7
+if
+ 0@ == 17 //2.00
+jf @end 
+0DD9: write_mem_addr 0x00585674 value 800000.0 size 4 add_ib 1 protect 1
+0DD9: write_mem_addr 0x00585678 value -800000.0 size 4 add_ib 1 protect 1
+
+:end
+end_thread 

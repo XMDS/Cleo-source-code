@@ -1,0 +1,239 @@
+// This file was decompiled using VCSCM.ini published by GTAMods.com on 2019-10-19
+{$CLEO .cs}
+
+//-------------MAIN---------------
+03A4: name_thread 'FLASH' 
+
+:FLASH_10
+0001: wait 0 ms 
+00D6: if 
+0256:   player $PLAYER_CHAR defined 
+004D: jump_if_false @FLASH_10 
+0247: request_model 6001 
+0247: request_model 6002 
+0247: request_model 6003 
+0247: request_model 6004 
+0247: request_model 6005 
+0247: request_model 6006 
+038B: load_requested_models 
+0006: 6@ = 0 // @ = int 
+
+:FLASH_69
+0001: wait 200 ms 
+00D6: if and
+80DF:   not actor $PLAYER_ACTOR in_any_car 
+05EE:   key_pressed 51 //VK_... 
+004D: jump_if_false @FLASH_69 
+0002: jump @FLASH_101 
+
+:FLASH_101
+03CF: load_wav 'BAR_2' as 2 
+00D6: if 
+03D0:   wav 2 loaded 
+004D: jump_if_false @FLASH_211 
+
+:FLASH_128
+0001: wait 0 ms 
+03D1: play_wav 2 
+00D6: if 
+0039:   6@ == 0 // @ == int 
+004D: jump_if_false @FLASH_453 
+0006: 5@ = 6000 // @ = int 
+0006: 4@ = 0 // @ = int 
+00D6: if 
+0548:   player $PLAYER_CHAR check_for_ped_model #COP #ARMY radius 30.0 30.0 30.0 
+004D: jump_if_false @FLASH_246 
+0002: jump @FLASH_872 
+
+:FLASH_211
+00D6: if 
+83D0:   not wav 2 loaded 
+004D: jump_if_false @FLASH_128 
+0001: wait 0 ms 
+00D6: if 
+8256:   not player $PLAYER_CHAR defined 
+004D: jump_if_false @FLASH_211 
+
+:FLASH_246
+000A: 5@ += 1 // @ += int 
+000B: 4@ += 4.0 // @ += float 
+00D6: if 
+8029:   not  5@ >= 6006 // @ >= int 
+004D: jump_if_false @FLASH_620 
+04C4: create_coordinate 1@ 2@ 3@ from_actor $PLAYER_ACTOR offset 0.0 4@ 0.0 
+0107: 0@ = create_object 5@ at 1@ 2@ 3@ 
+05EF: 6@ = random_actor_near_point 1@ 2@ 3@ in_radius 5.0 find_next 0 pass_deads 1 //IF and SET 
+05F0: 7@ = random_vehicle_near_point 1@ 2@ 3@ in_radius 5.0 find_next 0 pass_wrecked 1 //IF and SET 
+00D6: if 
+8039:   not  6@ == 0 // @ == int 
+004D: jump_if_false @FLASH_581 
+01CE: actor 6@ avoid_player $PLAYER_CHAR 
+0108: destroy_object 0@ 
+00D6: if 
+80DF:   not actor 6@ in_any_car 
+004D: jump_if_false @FLASH_817 
+0050: gosub @FLASH_1303 
+0372: set_actor 6@ anim 30 wait_state_time 60000000 ms 
+0006: 5@ = 6000 // @ = int 
+0002: jump @FLASH_101 
+
+:FLASH_453
+0001: wait 0 ms 
+00D6: if 
+8029:   not  5@ >= 6006 // @ >= int 
+004D: jump_if_false @FLASH_844 
+000A: 5@ += 1 // @ += int 
+04C4: create_coordinate 1@ 2@ 3@ from_actor 6@ offset 0.0 0.5 -0.5 
+0437: scatter_particle 23 0.3 at 1@ 2@ 3@ 0 0 0 
+0107: 0@ = create_object 5@ at 1@ 2@ 3@ 
+0001: wait 40 ms 
+0108: destroy_object 0@ 
+01C4: mark_object_as_no_longer_needed 0@ 
+0050: gosub @FLASH_910 
+0002: jump @FLASH_453 
+
+:FLASH_581
+00D6: if 
+0039:   7@ == 0 // @ == int 
+004D: jump_if_false @FLASH_641 
+0001: wait 40 ms 
+0108: destroy_object 0@ 
+01C4: mark_object_as_no_longer_needed 0@ 
+0002: jump @FLASH_246 
+
+:FLASH_620
+0001: wait 0 ms 
+0108: destroy_object 0@ 
+01C4: mark_object_as_no_longer_needed 0@ 
+0002: jump @FLASH_10 
+
+:FLASH_641
+0001: wait 0 ms 
+0108: destroy_object 0@ 
+0006: 5@ = 6000 // @ = int 
+
+:FLASH_658
+000A: 5@ += 1 // @ += int 
+00D6: if 
+8029:   not  5@ >= 6006 // @ >= int 
+004D: jump_if_false @FLASH_782 
+0407: create_coordinate 1@ 2@ 3@ from_car 7@ offset 0.0 1.0 0.7 
+0437: scatter_particle 23 3.0 at 1@ 2@ 3@ 0 0 0 
+0107: 0@ = create_object 5@ at 1@ 2@ 3@ 
+0001: wait 40 ms 
+0108: destroy_object 0@ 
+01C4: mark_object_as_no_longer_needed 0@ 
+0050: gosub @FLASH_910 
+0002: jump @FLASH_658 
+
+:FLASH_782
+020B: explode_car 7@ 
+01C3: mark_car_as_no_longer_needed 7@ 
+0002: jump @FLASH_10 
+
+:FLASH_799
+0001: wait 0 ms 
+0006: 6@ = 0 // @ = int 
+0002: jump @FLASH_10 
+
+:FLASH_817
+0001: wait 0 ms 
+03C0: 7@ = actor 6@ car_no_save 
+0006: 5@ = 6000 // @ = int 
+0002: jump @FLASH_658 
+
+:FLASH_844
+00D6: if 
+8118:   not actor 6@ dead 
+004D: jump_if_false @FLASH_799 
+0321: kill_actor 6@ 
+0002: jump @FLASH_620 
+
+:FLASH_872
+00D6: if 
+810F:   not player $PLAYER_CHAR wanted_level > 0 
+004D: jump_if_false @FLASH_246 
+010D: set_player $PLAYER_CHAR wanted_level_to 1 
+0002: jump @FLASH_246 
+
+:FLASH_904
+0001: wait 0 ms 
+0051: return 
+
+:FLASH_910
+0001: wait 0 ms 
+05EF: 8@ = random_actor_near_point 1@ 2@ 3@ in_radius 5.0 find_next 0 pass_deads 1 //IF and SET 
+00D6: if 
+8039:   not  8@ == 0 // @ == int 
+004D: jump_if_false @FLASH_1026 
+00D6: if 
+80DF:   not actor 8@ in_any_car 
+004D: jump_if_false @FLASH_904 
+00D6: if 
+8039:   not  6@ == 0 // @ == int 
+004D: jump_if_false @FLASH_999 
+0321: kill_actor 6@ 
+01C2: mark_actor_as_no_longer_needed 6@ 
+
+:FLASH_999
+0372: set_actor 8@ anim 30 wait_state_time 60000000 ms 
+0085: 6@ = 8@ // @ = @ int 
+0002: jump @FLASH_1097 
+
+:FLASH_1026
+0001: wait 0 ms 
+05F0: 9@ = random_vehicle_near_point 1@ 2@ 3@ in_radius 5.0 find_next 0 pass_wrecked 1 //IF and SET 
+00D6: if 
+803A:   not  7@ == 9@ // $ == $ int 
+004D: jump_if_false @FLASH_904 
+020B: explode_car 7@ 
+01C3: mark_car_as_no_longer_needed 7@ 
+0085: 7@ = 9@ // @ = @ int 
+0002: jump @FLASH_1097 
+
+:FLASH_1097
+03CF: load_wav 'BAR_2' as 2 
+00D6: if 
+03D0:   wav 2 loaded 
+004D: jump_if_false @FLASH_1261 
+
+:FLASH_1124
+016A: fade 1 0 ms 
+03D1: play_wav 2 
+0006: 5@ = 6000 // @ = int 
+00D6: if and
+0548:   player $PLAYER_CHAR check_for_ped_model #COP #ARMY radius 30.0 30.0 30.0 
+810F:   not player $PLAYER_CHAR wanted_level > 0 
+004D: jump_if_false @FLASH_904 
+010D: set_player $PLAYER_CHAR wanted_level_to 1 
+00D6: if 
+85F0:   not 7@ = random_vehicle_near_point 1@ 2@ 3@ in_radius 5.0 find_next 0 pass_wrecked 1 //IF and SET 
+004D: jump_if_false @FLASH_658 
+00D6: if 
+85EF:   not 6@ = random_actor_near_point 1@ 2@ 3@ in_radius 5.0 find_next 0 pass_deads 1 //IF and SET 
+004D: jump_if_false @FLASH_453 
+0051: return 
+
+:FLASH_1261
+00D6: if 
+83D0:   not wav 2 loaded 
+004D: jump_if_false @FLASH_1124 
+0001: wait 0 ms 
+00D6: if 
+8256:   not player $PLAYER_CHAR defined 
+004D: jump_if_false @FLASH_1261 
+0002: jump @FLASH_1261 
+
+:FLASH_1303
+00D6: if 
+810F:   not player $PLAYER_CHAR wanted_level > 1 
+004D: jump_if_false @FLASH_904 
+0001: wait 0 ms 
+04C4: create_coordinate 11@ 12@ 15@ from_actor 6@ offset 1.0 1.0 0 
+04C4: create_coordinate 13@ 14@ 15@ from_actor 6@ offset -1.0 -1.0 0 
+0469: create_actor 15@ in area 11@ 12@ 13@ 14@ unknown 1 0 0 0 0 
+00D6: if 
+8039:   not  15@ == -1 // @ == int 
+004D: jump_if_false @FLASH_904 
+010D: set_player $PLAYER_CHAR wanted_level_to 2 
+0051: return 

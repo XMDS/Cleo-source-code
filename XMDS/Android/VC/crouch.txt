@@ -1,0 +1,19 @@
+{$CLEO .csa}
+0000:
+//by: XMDS
+const
+ _PLAYER_CHAR = $303
+ _PLAYER_ACTOR = $304
+end
+
+:crouch
+wait 0
+0DE1: 0@ = get_touch_slide_state from 6 to 3 mintime 300 maxtime 1000
+if and
+0256:  player _PLAYER_CHAR defined
+80E0:  not player _PLAYER_CHAR driving
+03EE:  player _PLAYER_CHAR controllable
+0@ == 1
+jf @crouch
+04EB: actor _PLAYER_ACTOR crouch 1 9999999 ms
+jump @crouch

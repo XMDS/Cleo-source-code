@@ -1,0 +1,36 @@
+{$CLEO .csa}
+0000:
+//by: XMDS
+//StreamingMemoryAvailable
+//3_1.6:   0x005FAA6C
+//3_1.8:   0x003679EC
+//VC_1.07: 0x006C78B0
+//VC_1.09: 0x006E7158 
+//SA_1.08: 0x005DE734
+//SA_2.00: 0x00685FA0
+
+const
+ 2GB = 0x80000000
+ 1GB = 0x40000000
+ 512M = 0x20000000
+ 256M = 0x10000000
+ 128M = 0x08000000
+ 64M = 0x04000000
+ 48M = 0x03000000
+ 32M = 0x02000000
+ 16M = 0x01000000
+ 8M = 0x00800000
+ 4M = 0x00400000
+ 2M = 0x00200000
+ 1M = 0x00100000
+end
+
+0DD0: 0@ = get_label_addr @_ZN10CStreaming18ms_memoryAvailableE
+0DD1: 0@ = get_func_addr_by_cstr_name 0@
+0DD9: write_mem_addr 0@ value 2GB size 4 add_ib 0 protect 1
+end_thread 
+
+:_ZN10CStreaming18ms_memoryAvailableE
+hex
+ "_ZN10CStreaming18ms_memoryAvailableE" 00
+end

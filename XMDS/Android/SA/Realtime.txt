@@ -1,0 +1,276 @@
+{$CLEO .csa}
+0000:
+//真实时间用到以下两个函数：gettimeofday和gmtime，函数解释请百度百科。 
+//int gettimeofday(struct timeval*tv, struct timezone *tz);  
+//struct tm *gmtime(const time_t *timer)
+0DD9: write_mem_addr 0x0027E056 value 0xBF00BF00 size 4 add_ib 1 protect 1 //把CFont::PrintString函数改成nop空指令,使游戏时间显示字幕关闭 
+
+:1
+wait 0
+0DD0: 0@ = get_label_addr @gettimeofday            //gettimeofday获得当前精确时间（1970年1月1日到现在的时间）
+0DD1: 0@ = get_func_addr_by_cstr_name 0@
+0DD0: 1@ = get_label_addr @timeval_tv              //由于参数tv是结构体,需要手动分配一段内存用来保存时间,变量1@为指针,指向这段内存 
+0DD3: context_set_reg 1 value 0 //timezone *tz      参数tz用于保存时区结果,由于这里用不上则传入NULL，也就是参数设置为0 
+0DD3: context_set_reg 0 value 1@ //timeval*tv       参数tv是保存获取时间结果的结构体
+//而结构体timeval的定义为：
+//struct timeval{
+//long int tv_sec; // 秒数
+//long int tv_usec; // 微秒数
+//}
+//它获得的时间精确到微秒（1e-6 s)量级。
+0DD2: context_call_func 0@
+0DD4: 2@ = context_get_reg 0 //返回值                              
+if
+ 2@ == 0                   //判断函数返回值确定函数执行成功,函数执行成功后返回0，失败后返回-1，错误代码存于errno中。
+jf @1
+0DD0: 3@ = get_label_addr @gmtime //gmtime是把日期和时间转换为格林威治(GMT)时间的函数。将参数time 所指的time_t 结构中的信息转换成真实世界所使用的时间日期表示方法，然后将结果由结构tm返回。
+0DD1: 3@ = get_func_addr_by_cstr_name 3@
+0DD3: context_set_reg 0 value 1@ //timeval *tv 参数time_t *timer为一个结构体指针,由于已经用gettimeofday函数获取了时间,这里参数只要填timeval *tv指针，因为时间已经保存在这个内存里 
+0DD2: context_call_func 3@
+0DD4: 4@ = context_get_reg 0  //函数返回为tm结构的指针,转换好的真实时间保存在这个tm内存指针
+//tm结构定义：
+//    struct tm{
+//                int tm_sec;            //取值[0,59]，非正常情况下可到达61
+//                int tm_min;            //取值同上
+//                int tm_hour;            //取值[0,23]
+//                int tm_mday;            //取值[1,31]
+//                int tm_mon;            //取值[0,11]
+//                int tm_year;            //1900年起距今的年数
+//                int tm_wday;            //取值[0,6]
+//                int tm_yday;            //取值[0，366]
+//                int tm_isdst;            //夏令时标志
+//        };
+//返回值：如上所述,每个占用4字节 
+0DD8: 5@ = read_mem_addr 4@ size 4 add_ib 0 //秒 tm_sec  //读取指tm结构体指针4字节的数据，也就是结构体第一个int tm_sec,为秒 
+4@ += 4                                     //读完第一个每次加4读取下一个,因为每个数据占4个字节 
+0DD8: 6@ = read_mem_addr 4@ size 4 add_ib 0 //分 tm_min
+4@ += 4
+0DD8: 7@ = read_mem_addr 4@ size 4 add_ib 0 //时 tm_hour
+7@ += 8 //函数获得是GMT时间（格林威治标准时间）一般指世界时,即0时区的区时,比北京时间（东8区）晚8小时,所以这里加8 
+4@ += 4
+0DD8: 8@ = read_mem_addr 4@ size 4 add_ib 0 //日 tm_mday
+4@ += 4
+0DD8: 9@ = read_mem_addr 4@ size 4 add_ib 0 //月 tm_mon
+9@ += 1//月的取值范围在程序里是0-11,而现实是1-12,所以加1 
+4@ += 4
+0DD8: 10@ = read_mem_addr 4@ size 4 add_ib 0 //年 tm_year
+10@ += 1900//函数设定是1900开始到现在的年数,所以加1900得出正确年份 
+//0308: show_text_6numbers GXT 'CS_TIME' numbers 10@ 9@ 8@ 7@ 6@ 5@ time 10 flag 5
+
+//以下代码为把现实时间写入游戏时间 
+0DD0: 18@ = get_label_addr @_ZN6CClock17ms_nGameClockDaysE
+0DD1: 18@ = get_func_addr_by_cstr_name 18@                     //天 
+0DD9: write_mem_addr 18@ value 8@ size 1 add_ib 0 protect 1
+
+0DD0: 19@ = get_label_addr @_ZN6CClock19ms_nGameClockMonthsE
+0DD1: 19@ = get_func_addr_by_cstr_name 19@                    //月 
+0DD9: write_mem_addr 19@ value 9@ size 1 add_ib 0 protect 1
+
+0DD0: 20@ = get_label_addr @_ZN6CClock18ms_nGameClockHoursE   
+0DD1: 20@ = get_func_addr_by_cstr_name 20@                    //时 
+0DD9: write_mem_addr 20@ value 7@ size 1 add_ib 0 protect 1
+
+0DD0: 21@ = get_label_addr @_ZN6CClock20ms_nGameClockMinutesE
+0DD1: 21@ = get_func_addr_by_cstr_name 21@                    //分 
+0DD9: write_mem_addr 21@ value 6@ size 1 add_ib 0 protect 1
+
+0DD0: 22@ = get_label_addr @_ZN6CClock20ms_nGameClockSecondsE
+0DD1: 22@ = get_func_addr_by_cstr_name 22@                    //秒 
+0DD9: write_mem_addr 22@ value 5@ size 2 add_ib 0 protect 1
+
+0DD0: 23@ = get_label_addr @_ZN6CTimer22m_snTimeInMillisecondsE
+0DD1: 23@ = get_func_addr_by_cstr_name 23@                 //读取当前时间 
+0DD8: 23@ = read_mem_addr 23@ size 4 add_ib 0
+
+0DD0: 24@ = get_label_addr @_ZN6CClock17ms_nLastClockTickE
+0DD1: 24@ = get_func_addr_by_cstr_name 24@                    //更新时间 
+0DD9: write_mem_addr 24@ value 23@ size 4 add_ib 0 protect 1
+
+0DD8: 11@ = read_mem_addr 20@ size 1 add_ib 0
+0DD8: 12@ = read_mem_addr 21@ size 1 add_ib 0                //读取已经写入的真实时间 
+0DD8: 13@ = read_mem_addr 22@ size 2 add_ib 0
+if
+ 11@ > 9
+jf @2
+if
+ 12@ > 9
+jf @3
+gosub @text
+045B: draw_text_2numbers 560.0 18.0 GXT 'ZSTIME' numbers 11@ 12@  //绘制新的字幕显示时间 
+03F0: enable_text_draw 0
+jump @5
+
+:2
+if
+ 12@ > 9
+jf @4
+gosub @text
+045B: draw_text_2numbers 560.0 18.0 GXT 'ZSTIME1' numbers 11@ 12@
+03F0: enable_text_draw 0
+jump @5
+
+:3
+gosub @text
+045B: draw_text_2numbers 560.0 18.0 GXT 'ZSTIME2' numbers 11@ 12@
+03F0: enable_text_draw 0
+jump @5
+
+:4
+gosub @text
+045B: draw_text_2numbers 560.0 18.0 GXT 'ZSTIME3' numbers 11@ 12@ 
+03F0: enable_text_draw 0
+
+:5 
+if
+ 13@ > 9
+jf @6
+gosub @text
+045A: draw_text_1number 618.0 18.0 GXT 'ZSTIME4' number 13@
+03F0: enable_text_draw 0
+jump @1
+
+:6
+gosub @text
+045A: draw_text_1number 618.0 18.0 GXT 'ZSTIME5' number 13@
+03F0: enable_text_draw 0
+jump @1
+
+:text
+0349: set_text_draw_font 6
+0341: set_text_draw_align_justify 1
+0348: enable_text_draw_proportional 1
+03E4: set_text_draw_align_right 0
+0343: set_text_draw_linewidth 640.0
+0342: set_text_draw_centered 0
+0345: enable_text_draw_background 0
+0340: set_text_draw_RGBA 255 255 255 200
+060D: draw_text_shadow 1 rgba 0 0 0 255
+033F: set_text_draw_letter_size 2.5 2.5
+return
+
+:gettimeofday
+hex
+ "gettimeofday" 00
+end
+
+:gmtime
+hex
+ "gmtime" 00
+end
+
+:_ZN6CClock18ms_nGameClockHoursE
+hex
+"_ZN6CClock18ms_nGameClockHoursE" 00
+end
+
+:_ZN6CClock20ms_nGameClockMinutesE
+hex
+ "_ZN6CClock20ms_nGameClockMinutesE" 00
+end
+
+:_ZN6CClock20ms_nGameClockSecondsE
+hex
+ "_ZN6CClock20ms_nGameClockSecondsE" 00
+end
+
+:_ZN6CClock17ms_nGameClockDaysE
+hex
+ "_ZN6CClock17ms_nGameClockDaysE" 00
+end
+
+:_ZN6CClock19ms_nGameClockMonthsE
+hex
+ "_ZN6CClock19ms_nGameClockMonthsE" 00
+end
+
+:_ZN6CTimer22m_snTimeInMillisecondsE
+hex
+ "_ZN6CTimer22m_snTimeInMillisecondsE" 00
+end
+
+:_ZN6CClock17ms_nLastClockTickE
+hex
+ "_ZN6CClock17ms_nLastClockTickE" 00
+end 
+
+:timeval_tv
+hex
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00
+end

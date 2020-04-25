@@ -1,0 +1,126 @@
+{$CLEO .csa}
+0000:
+//by: XMDS
+//GTAVC IV_Pickups
+//2018.12.1
+//本CLEO并未完成，因为安卓VC无法使用016F这个OP，同时创建阴影粒子的函数调用有问题。包括游戏还有闪退的现象。暂时无法完成该CLEO，现公布源代码，有兴趣的可以帮我修复。
+const
+ _PLAYER_CHAR = $303
+ _PLAYER_ACTOR = $304
+end
+
+0DD6: 0@ = get_game_version
+if
+ 0@ <> 12 // 2=GTAVCv1.03 12=GTAVCv1.06(1.07)
+jf @DisableFunction
+end_thread
+
+:DisableFunction
+0DD9: write_mem_addr 0x0013BAAE value 0xBF00BF00 size 4 add_ib 1 protect 1 //CPickups::DoMoneyEffects(CEntity *)
+
+0DD9: write_mem_addr 0x000F7300 value 0xBF00BF00 size 4 add_ib 1 protect 1 //CCoronas::RegisterCorona
+0DD9: write_mem_addr 0x000F7350 value 0xBF00BF00 size 4 add_ib 1 protect 1
+0DD9: write_mem_addr 0x000F7674 value 0xBF00BF00 size 4 add_ib 1 protect 1
+0DD9: write_mem_addr 0x000F7820 value 0xBF00BF00 size 4 add_ib 1 protect 1
+0DD9: write_mem_addr 0x000F797A value 0xBF00BF00 size 4 add_ib 1 protect 1
+0DD9: write_mem_addr 0x000F79C6 value 0xBF00BF00 size 4 add_ib 1 protect 1
+
+0DD9: write_mem_addr 0x000F7710 value 0xBF00BF00 size 4 add_ib 1 protect 1 //CShadows::StoreStaticShadow
+//0DD9: write_mem_addr 0x000F7686 value 0x3E96F2C4 size 4 add_ib 1 protect 1
+//0DD9: write_mem_addr 0x000F78E8 value 0.5 size 4 add_ib 1 protect 1
+
+0DD9: write_mem_addr 0x000F775A value 0xBF00BF00 size 4 add_ib 1 protect 1 //CPointLights::AddLight
+
+0DD9: write_mem_addr 0x0013B9DC value 0xBF00BF00 size 4 add_ib 1 protect 1 //CMatrix::UpdateRW(void)
+0DD9: write_mem_addr 0x0013B9E2 value 0xBF00BF00 size 4 add_ib 1 protect 1 //CEntity::UpdateRwFrame(void)
+wait 10000
+
+:Pickup
+wait 0
+10@ = 0x0045A3F8 //_ZN8CPickups8aPickUpsE
+0085: 0@ = 10@
+10@ += 0x440C
+
+:Main
+0085: 5@ = 0@
+5@ += 0
+0DD8: 1@ = read_mem_addr 5@ size 4 add_ib 1 //X
+0085: 5@ = 0@
+5@ += 4
+0DD8: 2@ = read_mem_addr 5@ size 4 add_ib 1 //Y
+0085: 5@ = 0@
+5@ += 8
+0DD8: 3@ = read_mem_addr 5@ size 4 add_ib 1 //Z
+0085: 5@ = 0@
+5@ += 0x10
+0DD8: 6@ = read_mem_addr 5@ size 4 add_ib 1 //[POINTER] - CObjectVC* Object
+0085: 5@ = 0@
+5@ += 0x22
+0DD8: 7@ = read_mem_addr 5@ size 2 add_ib 1 //ModelId
+if and
+ 1@ <> 0.0
+ 2@ <> 0.0
+ 3@ <> 0.0
+ 6@ <> 0
+jf @while
+0DD0: 8@ = get_label_addr @_ZN6CPools12GetObjectRefEP7CObject
+0DD1: 8@ = get_func_addr_by_cstr_name 8@
+0DD3: context_set_reg 0 value 6@
+0DD2: context_call_func 8@
+0DD4: 8@ = context_get_reg 0
+if
+03CA:   object 8@ exists
+jf @while
+if 
+00EC:   actor _PLAYER_ACTOR 0 1@ 2@ radius 60.0 60.0
+jf @while
+if or
+00EC:   actor _PLAYER_ACTOR 0 1@ 2@ radius 45.0 45.0 
+02CC:   object 8@ bounding_sphere_visible 
+jf @while
+02CE: 4@ = ground_z 1@ 2@ 3@
+4@ += 0.05
+0061: 3@ -= 4@
+if 
+ 3@ <= 5.0
+jf @while
+0085: 5@ = 0@
+5@ += 8
+0DD9: write_mem_addr 5@ value 4@ size 4 add_ib 1 protect 1
+0176: 15@ = object 8@ z_angle
+//0B17: 15@ &= 255
+0097: make 15@ absolute_float
+0085: 14@ = 15@
+14@ /= 256
+14@ *= 256
+0060: 15@ -= 14@
+if
+ 15@ <> 255
+jf @while
+0208: 15@ = random_float 0.0 360.0
+//0B17: 15@ &= 255
+0097: make 15@ absolute_float
+0085: 14@ = 15@
+14@ /= 256
+14@ *= 256
+0060: 15@ -= 14@
+if
+ 7@ <> 337 //money
+jf @money
+0453: object 8@ set_rotation 90.0 0.0 15@
+jump @while
+
+:money
+0453: object 8@ set_rotation 0.0 0.0 15@
+
+:while
+0@ += 0x34
+if
+001D: 0@ > 10@
+jf @Main
+jump @Pickup
+
+:_ZN6CPools12GetObjectRefEP7CObject
+hex
+ "_ZN6CPools12GetObjectRefEP7CObject" 00
+end

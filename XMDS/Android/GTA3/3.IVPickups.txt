@@ -1,0 +1,258 @@
+{$CLEO .csa}
+0000:
+//by: XMDS
+//GTA3 IV_Pickups
+//2018.11.27
+0DD6: 0@ = get_game_version
+if
+ 0@ <> 11 // 1=GTA3v1.4 11=GTA3v1.6
+jf @DisableFunction
+end_thread
+
+:DisableFunction
+0DD9: write_mem_addr 0x00166572 value 0xBF00BF00 size 4 add_ib 1 protect 1 //CPickups::DoMoneyEffects(CEntity *)
+0DD9: write_mem_addr 0x001665C4 value 0xBF00BF00 size 4 add_ib 1 protect 1 //CPickups::DoCollectableEffects(CEntity *)
+
+0DD9: write_mem_addr 0x00126222 value 0xBF00BF00 size 4 add_ib 1 protect 1 //CCoronas::RegisterCorona
+0DD9: write_mem_addr 0x00126484 value 0xBF00BF00 size 4 add_ib 1 protect 1 //CShadows::StoreStaticShadow
+
+0DD9: write_mem_addr 0x00166578 value 0xBF00BF00 size 4 add_ib 1 protect 1 //CMatrix::UpdateRW(void) for money
+0DD9: write_mem_addr 0x0016657E value 0xBF00BF00 size 4 add_ib 1 protect 1 //CEntity::UpdateRwFrame(void) for money
+0DD9: write_mem_addr 0x001665B8 value 0xBF00BF00 size 4 add_ib 1 protect 1 //CMatrix::UpdateRW(void) for pickup
+0DD9: write_mem_addr 0x001665BE value 0xBF00BF00 size 4 add_ib 1 protect 1 //CEntity::UpdateRwFrame(void) for pickup
+0DD9: write_mem_addr 0x001665CA value 0xBF00BF00 size 4 add_ib 1 protect 1 //CMatrix::UpdateRW(void) for Collectable
+0DD9: write_mem_addr 0x001665D0 value 0xBF00BF00 size 4 add_ib 1 protect 1 //CEntity::UpdateRwFrame(void) for Collectable
+
+:Pickup
+wait 0
+10@ = 0x00386174 //_ZN8CPickups8aPickUpsE
+0085: 0@ = 10@
+10@ += 0x248C
+
+:Main
+0085: 5@ = 0@
+5@ += 0x10
+0DD8: 1@ = read_mem_addr 5@ size 4 add_ib 1 //X
+0085: 5@ = 0@
+5@ += 0x14
+0DD8: 2@ = read_mem_addr 5@ size 4 add_ib 1 //Y
+0085: 5@ = 0@
+5@ += 0x18
+0DD8: 3@ = read_mem_addr 5@ size 4 add_ib 1 //Z
+0085: 5@ = 0@
+5@ += 4
+0DD8: 6@ = read_mem_addr 5@ size 4 add_ib 1 //[POINTER] - CObjectVC* Object
+0085: 5@ = 0@
+5@ += 0xC
+0DD8: 7@ = read_mem_addr 5@ size 2 add_ib 1 //ModelId
+if
+ 6@ <> 0
+jf @while
+0DD0: 8@ = get_label_addr @_ZN6CPools12GetObjectRefEP7CObject
+0DD1: 8@ = get_func_addr_by_cstr_name 8@
+0DD3: context_set_reg 0 value 6@
+0DD2: context_call_func 8@
+0DD4: 8@ = context_get_reg 0
+if
+03CA:   object 8@ exists
+jf @while
+if 
+00EC:   actor $PLAYER_ACTOR 0 1@ 2@ radius 60.0 60.0
+jf @while
+if or
+00EC:   actor $PLAYER_ACTOR 0 1@ 2@ radius 45.0 45.0 
+02CC:   object 8@ bounding_sphere_visible 
+jf @while
+02CE: 4@ = ground_z 1@ 2@ 3@
+4@ += 0.0625
+0061: 3@ -= 4@
+if 
+ 3@ <= 5.0
+jf @while
+0085: 5@ = 6@
+5@ += 0x3C
+0DD9: write_mem_addr 5@ value 4@ size 4 add_ib 0 protect 1
+0176: 15@ = object 8@ z_angle
+//0B17: 15@ &= 255
+0097: make 15@ absolute_float
+0085: 14@ = 15@
+14@ /= 256
+14@ *= 256
+0060: 15@ -= 14@
+if
+ 15@ <> 255
+jf @while
+0208: 15@ = random_float 0.0 360.0
+//0B17: 15@ &= 255
+0097: make 15@ absolute_float
+0085: 14@ = 15@
+14@ /= 256
+14@ *= 256
+0060: 15@ -= 14@
+if
+ 7@ <> 172 //Bat
+jf @Bat
+if
+ 7@ <> 173 //Pistol colt45
+jf @Pistol
+if
+ 7@ <> 178 //Uzi
+jf @Uzi
+if
+ 7@ <> 176 //Shotgun
+jf @Shotgun
+if
+ 7@ <> 171 //AK47
+jf @AK47
+if
+ 7@ <> 180 //M16
+jf @M16
+if
+ 7@ <> 177 //Sniper Rifle
+jf @Sniper
+if
+ 7@ <> 175 //Rocket Launcher
+jf @Rocket
+if
+ 7@ <> 181 //Flamethrower
+jf @Flame
+if
+ 7@ <> 174 //Molotov Cocktail
+jf @Molotov
+if
+ 7@ <> 170 //Grenade
+jf @Grenade
+if 
+ 7@ <> 1363 //Pill
+jf @Pill
+if and
+ 7@ <> 1364 //Armor
+ 7@ <> 1383 //Star
+jf @ArmorStar
+if and
+ 7@ <> 1361 //ExclamationMark
+ 7@ <> 1392 //ViolentTask
+jf @EMVT
+if 
+ 7@ <> 1362 //Health
+jf @Health
+if
+ 7@ <> 1321 //CollectableHiddenPackage
+jf @Collectable
+if
+ 7@ == 1323 //money
+jf @while
+0453: object 8@ set_rotation 0.0 0.0 15@
+016F: create_particle 3 0.0 0.5 255 0 155 0 at 1@ 2@ 4@
+jump @while
+
+:Bat
+0DD8: 11@ = read_mem_addr 0x002D9C40 size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C30 size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C20 size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:Pistol
+0DD8: 11@ = read_mem_addr 0x002D9C41 size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C31 size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C21 size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:Uzi
+0DD8: 11@ = read_mem_addr 0x002D9C42 size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C32 size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C22 size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:Shotgun
+0DD8: 11@ = read_mem_addr 0x002D9C43 size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C33 size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C23 size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:AK47
+0DD8: 11@ = read_mem_addr 0x002D9C44 size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C34 size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C24 size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:M16
+0DD8: 11@ = read_mem_addr 0x002D9C45 size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C35 size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C25 size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:Sniper
+0DD8: 11@ = read_mem_addr 0x002D9C46 size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C36 size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C26 size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:Rocket
+0DD8: 11@ = read_mem_addr 0x002D9C47 size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C37 size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C27 size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:Flame
+0DD8: 11@ = read_mem_addr 0x002D9C48 size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C38 size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C28 size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:Molotov
+0DD8: 11@ = read_mem_addr 0x002D9C49 size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C39 size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C29 size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:Grenade
+0DD8: 11@ = read_mem_addr 0x002D9C4A size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C3A size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C2A size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:Pill
+0DD8: 11@ = read_mem_addr 0x002D9C4B size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C3B size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C2B size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:ArmorStar
+0DD8: 11@ = read_mem_addr 0x002D9C4C size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C3C size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C2C size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:EMVT
+0DD8: 11@ = read_mem_addr 0x002D9C4D size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C3D size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C2D size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:Health
+0DD8: 11@ = read_mem_addr 0x002D9C4E size 1 add_ib 1 //aWeaponReds
+0DD8: 12@ = read_mem_addr 0x002D9C3E size 1 add_ib 1 //aWeaponGreens
+0DD8: 13@ = read_mem_addr 0x002D9C2E size 1 add_ib 1 //aWeaponBlues
+jump @PickupParticle
+
+:Collectable
+11@ = 255 //R
+12@ = 255 //G
+13@ = 255 //B
+
+:PickupParticle
+0453: object 8@ set_rotation 90.0 0.0 15@
+016F: create_particle 3 0.0 0.5 255 11@ 12@ 13@ at 1@ 2@ 4@
+
+:while
+0@ += 0x1C
+if
+001D: 0@ > 10@
+jf @Main
+jump @Pickup
+
+:_ZN6CPools12GetObjectRefEP7CObject
+hex
+ "_ZN6CPools12GetObjectRefEP7CObject" 00
+end

@@ -1,0 +1,96 @@
+{$CLEO .csa}
+Thread 'STANCE'
+//OriginalAuthor: Strike灬
+//本CLEO移植至罪吧吧主SK的MM动作补丁3.0
+//Android by: XMDS 
+
+const
+ _PLAYER_CHAR = $303
+ _PLAYER_ACTOR = $304
+ _onmission = $616
+ pads = 0x0058A8EC
+end
+
+0DD6: 0@ = get_game_version
+if
+ 0@ <> 12
+jf @STANCE1
+end_thread
+
+:STANCE1
+Wait 0
+if and
+0256:   player _PLAYER_CHAR defined 
+80DF:   not actor _PLAYER_ACTOR driving
+jf @STANCE1
+0DE1: 2@ = get_touch_slide_state from 4 to 1 mintime 300 maxtime 1000
+if
+ 2@ == 1
+jf @STANCE2
+1@ = 6
+jump @STANCE3
+
+:STANCE2
+0DE1: 3@ = get_touch_slide_state from 4 to 7 mintime 300 maxtime 1000
+if
+ 3@ == 1
+jf @STANCE1
+1@ = 5
+jump @STANCE3
+
+:STANCE3
+wait 0
+0DD0: 9@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 9@ = get_func_addr_by_cstr_name 9@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 9@
+0DD4: 9@ = context_get_reg 0
+9@ += 0x244
+0DD9: write_mem_addr 9@ value 12 size 4 add_ib 0 protect 0
+0DD9: write_mem_addr 0x0058A8F6 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8F8 value 16@ size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FA value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FC value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FE value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A900 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A902 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A906 value 0 size 2 add_ib 1 protect 0
+//0DD9: write_mem_addr 0x0058A908 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90A value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90C value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90E value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A910 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A912 value 0 size 2 add_ib 1 protect 0
+0DD0: 4@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 4@ = get_func_addr_by_cstr_name 4@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 4@
+0DD4: 4@ = context_get_reg 0
+4@ += 0x4C
+0DD8: 4@ = read_mem_addr 4@ size 4 add_ib 0
+0DD0: 5@ = get_label_addr @_ZN12CAnimManager14BlendAnimationEP7RpClump12AssocGroupId11AnimationIdf
+0DD1: 5@ = get_func_addr_by_cstr_name 5@
+0DD3: context_set_reg 3 value 4.0
+0DD3: context_set_reg 2 value 1@
+0DD3: context_set_reg 1 value 0
+0DD3: context_set_reg 0 value 4@
+0DD2: context_call_func 5@
+if
+00E1:   player 0 pressed_button 14
+jf @STANCE3
+0DD3: context_set_reg 3 value 4.0
+0DD3: context_set_reg 2 value 3
+0DD3: context_set_reg 1 value 0
+0DD3: context_set_reg 0 value 4@
+0DD2: context_call_func 5@
+jump @STANCE1
+
+:_ZN6CPools6GetPedEi
+hex
+ "_ZN6CPools6GetPedEi" 00
+end
+
+:_ZN12CAnimManager14BlendAnimationEP7RpClump12AssocGroupId11AnimationIdf
+hex
+ "_ZN12CAnimManager14BlendAnimationEP7RpClump12AssocGroupId11AnimationIdf" 00
+end 

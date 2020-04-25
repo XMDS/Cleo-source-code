@@ -1,0 +1,32 @@
+{$CLEO .csa}
+0000:
+//GTAVC
+//1.01 = 0x0025BF08
+//1.03 = 0x0025BF18
+//1.07 = 0x00246474
+//1.09 = 0x0025B950
+//By: China.XMDS
+//Emil: 2841824304@qq.com
+//2020.02.11
+0DD6: 0@ = get_game_version 
+if
+ 0@ == 2//1.03
+jf @1
+0DD9: write_mem_addr 0x0025BF18 value 8000.0 size 4 add_ib 1 protect 1
+jump @end
+
+:1
+if
+ 0@ == 12//1.07
+jf @2
+0DD9: write_mem_addr 0x00246474 value 8000.0 size 4 add_ib 1 protect 1
+jump @end
+
+:2
+if
+ 0@ == 16//1.09
+jf @end
+0DD9: write_mem_addr 0x0025B950 value 8000.0 size 4 add_ib 1 protect 1
+
+:end
+end_thread

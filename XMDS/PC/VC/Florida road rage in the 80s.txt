@@ -1,0 +1,78 @@
+{$CLEO .cs}
+0000:
+//by: XMDS
+//2018.12.31
+//https://gtamodding.wiki/031D
+
+:80vcCLEO_1
+wait 0
+if and
+0256:   player $PLAYER_CHAR defined
+00E0:   player $PLAYER_CHAR driving 
+0443:   player $PLAYER_CHAR in_a_car
+84C9:   not player $PLAYER_CHAR driving_plane 
+84A8:   not player $PLAYER_CHAR driving_boat
+84AA:   not player $PLAYER_CHAR driving_heli
+jf @80vcCLEO_1
+03C1: 10@ = player $PLAYER_CHAR car_no_save
+00AA: store_car 10@ position_to 1@ 2@ 3@
+05EF: 5@ = random_actor_near_point 1@ 2@ 3@ in_radius 10.0 find_next 0 pass_deads 1
+jf @80vcCLEO_1
+if
+056D:   actor 5@ defined
+jf @80vcCLEO_1
+if and
+00DF:  actor 5@ driving
+0449:  actor 5@ in_a_car
+jf @80vcCLEO_1 
+if and
+//boat
+80DD:   not actor 5@ driving_vehicle_type 136 //rio
+80DD:   not actor 5@ driving_vehicle_type 176 //squalo
+80DD:   not actor 5@ driving_vehicle_type 182 //speeder
+80DD:   not actor 5@ driving_vehicle_type 183 //reefer
+80DD:   not actor 5@ driving_vehicle_type 184 //tropic
+80DD:   not actor 5@ driving_vehicle_type 202 //coastg
+80DD:   not actor 5@ driving_vehicle_type 203 //dinghy
+80DD:   not actor 5@ driving_vehicle_type 214 //marquis
+jf @80vcCLEO_1
+if and
+80DD:   not actor 5@ driving_vehicle_type 223 //jetmax
+//特殊车辆 
+80DD:   not actor 5@ driving_vehicle_type 137 //firetruk 消防车 
+80DD:   not actor 5@ driving_vehicle_type 146 //ambulan  救护车 
+80DD:   not actor 5@ driving_vehicle_type 153 //mrwhoop  雪糕车
+80DD:   not actor 5@ driving_vehicle_type 161 //bus      巴士
+80DD:   not actor 5@ driving_vehicle_type 167 //coach    公交
+80DD:   not actor 5@ driving_vehicle_type 187 //caddy    高尔夫 
+80DD:   not actor 5@ driving_vehicle_type 215 //baggage  机场 
+jf @80vcCLEO_1
+if and 
+//wanted star 
+80DD:   not actor 5@ driving_vehicle_type 155 //hunter
+80DD:   not actor 5@ driving_vehicle_type 156 //police
+80DD:   not actor 5@ driving_vehicle_type 157 //enforcer
+80DD:   not actor 5@ driving_vehicle_type 158 //securica
+80DD:   not actor 5@ driving_vehicle_type 160 //predator  船 
+80DD:   not actor 5@ driving_vehicle_type 162 //rhino    坦克 
+80DD:   not actor 5@ driving_vehicle_type 163 //barracks
+80DD:   not actor 5@ driving_vehicle_type 220 //fbiranch
+jf @80vcCLEO_1
+if and 
+80DD:   not actor 5@ driving_vehicle_type 227 //polmav
+80DD:   not actor 5@ driving_vehicle_type 236 //vicechee
+80DD:   not actor 5@ driving_vehicle_type 200 //patriot
+//heli
+80DD:   not actor 5@ driving_vehicle_type 177 //seaspar
+80DD:   not actor 5@ driving_vehicle_type 190 //skimmer
+80DD:   not actor 5@ driving_vehicle_type 199 //sparrow
+80DD:   not actor 5@ driving_vehicle_type 217 //maverick
+80DD:   not actor 5@ driving_vehicle_type 218 //vcnmav
+jf @80vcCLEO_1
+03C0: 11@ = actor 5@ car
+if and
+031E:  vehicle 10@ hit_by_weapon 39
+031E:  vehicle 11@ hit_by_weapon 39
+jf @80vcCLEO_1
+01CA: actor 5@ kill_player $PLAYER_CHAR
+jump @80vcCLEO_1

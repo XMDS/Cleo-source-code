@@ -1,0 +1,276 @@
+{$CLEO .csa}
+Thread 'MM'
+//OriginalAuthor: Strike灬
+//本CLEO移植至罪吧吧主SK的MM动作补丁3.0
+//Android by: XMDS 
+
+const
+ _PLAYER_CHAR = $303
+ _PLAYER_ACTOR = $304
+ _onmission = $616
+ pads = 0x0058A8EC
+end
+
+6@ = 0
+0DD6: 0@ = get_game_version
+if
+ 0@ <> 12
+jf @MM1
+end_thread
+
+:MM1
+wait 0
+if and
+0256:   player _PLAYER_CHAR defined 
+80DF:   not actor _PLAYER_ACTOR driving
+jf @MM1
+0DE1: 0@ = get_touch_slide_state from 6 to 7 mintime 300 maxtime 1000
+if
+ 0@ == 1
+jf @MM7
+00BE: text_clear_all 
+01B4: set_player _PLAYER_CHAR frozen_state 0 
+01E3: text_1number_styled 'MMCLEO1' number 6@ time 6000 style 6 
+
+:MM2
+wait 0
+if
+00E1:   player 3 pressed_button 8
+jf @MM4
+wait 200
+00BE: text_clear_all 
+if 
+ 6@ > 1
+jf @MM3
+6@ = -1
+
+:MM3
+wait 0
+6@ += 1
+01E3: text_1number_styled 'MMCLEO1' number 6@ time 6000 style 6 
+jump @MM6
+
+:MM4
+wait 0
+if
+00E1:   player 3 pressed_button 2
+jf @MM6
+wait 200
+00BE: text_clear_all 
+if
+ not 6@ >= 1
+jf @MM5
+6@ = 3
+
+:MM5
+wait 0
+6@ -= 1
+01E3: text_1number_styled 'MMCLEO1' number 6@ time 6000 style 6 
+
+:MM6
+wait 0
+if
+00E1:   player 3 pressed_button 5 
+jf @MM2
+01B4: set_player _PLAYER_CHAR frozen_state 1
+
+:MM7
+if
+ 6@ == 0
+jf @MM8
+jump @MM1
+
+:MM8
+if
+ 6@ == 1
+jf @MM9
+7@ = 150
+8@ = 0.14
+15@ = 750
+jump @MM10
+
+:MM9
+if
+ 6@ == 2
+jf @MM1
+7@ = 150
+8@ = 0.32
+15@ = 1450
+
+:MM10
+0DD0: 5@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 5@ = get_func_addr_by_cstr_name 5@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 5@
+0DD4: 5@ = context_get_reg 0
+5@ += 0x244
+0DD8: 5@ = read_mem_addr 5@ size 1 add_ib 0
+if
+ 5@ == 41
+jf @MM1
+wait 200
+04C4: create_coordinate 11@ 12@ 13@ from_actor _PLAYER_ACTOR offset 0.0 0.0 0.0 
+02CE: 10@ = ground_z 11@ 12@ 13@ 
+0054: store_player _PLAYER_CHAR position_to 11@ 12@ 13@ 
+0087: 14@ = 13@
+0063: 14@ -= 10@
+if and
+ 14@ > 1.4
+83EE:   not player _PLAYER_CHAR controllable
+jf @MM1
+if
+04AD:   actor _PLAYER_ACTOR in_water 
+jf @MM11
+jump @MM1
+
+:MM11
+wait 0
+if and
+00E1:   player 0 pressed_button 14
+00E1:   player 3 pressed_button 4 
+83EE:   not player _PLAYER_CHAR controllable
+jf @MM12
+1@ = 0.0
+jump @MM13
+
+:MM12
+if and
+00E1:   player 0 pressed_button 14
+00E1:   player 3 pressed_button 6
+83EE:   not player _PLAYER_CHAR controllable
+jf @MM11
+1@ = 180.0
+
+:MM13
+0170: 0@ = player _PLAYER_CHAR z_angle
+005B: 0@ += 1@
+0DD0: 2@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 2@ = get_func_addr_by_cstr_name 2@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 2@
+0DD4: 2@ = context_get_reg 0
+2@ += 0x7C //0x78
+0DD9: write_mem_addr 2@ value 8@ size 4 add_ib 0 protect 0
+16@ = 0
+
+:MM14
+wait 0
+0DD0: 9@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 9@ = get_func_addr_by_cstr_name 9@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 9@
+0DD4: 9@ = context_get_reg 0
+9@ += 0x244
+0DD9: write_mem_addr 9@ value 12 size 4 add_ib 0 protect 0
+0DD9: write_mem_addr 0x0058A910 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90E value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8F8 value 16@ size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8F6 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FA value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FC value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FC value 0 size 2 add_ib 1 protect 0
+0171: set_player _PLAYER_CHAR z_angle_to 0@ 
+0DD0: 3@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 3@ = get_func_addr_by_cstr_name 3@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 3@
+0DD4: 3@ = context_get_reg 0
+3@ += 0x4C
+0DD8: 3@ = read_mem_addr 3@ size 4 add_ib 0
+0DD0: 5@ = get_label_addr @_ZN12CAnimManager14BlendAnimationEP7RpClump12AssocGroupId11AnimationIdf
+0DD1: 5@ = get_func_addr_by_cstr_name 5@
+0DD3: context_set_reg 3 value 10.0
+0DD3: context_set_reg 2 value 7@
+0DD3: context_set_reg 1 value 0
+0DD3: context_set_reg 0 value 3@
+0DD2: context_call_func 5@
+04C4: create_coordinate 1@ 2@ 3@ from_actor _PLAYER_ACTOR offset 0.0 0.0 -1.0 
+0055: put_player _PLAYER_CHAR at 1@ 2@ 3@ 
+if
+0018:  16@ > 15@
+jf @MM14
+0DD0: 9@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 9@ = get_func_addr_by_cstr_name 9@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 9@
+0DD4: 9@ = context_get_reg 0
+9@ += 0x244
+0DD9: write_mem_addr 9@ value 12 size 4 add_ib 0 protect 0
+0DD9: write_mem_addr 0x0058A910 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90E value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8F8 value 16@ size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8F6 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FA value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FC value 0 size 2 add_ib 1 protect 0
+0DD0: 4@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 4@ = get_func_addr_by_cstr_name 4@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 4@
+0DD4: 4@ = context_get_reg 0
+4@ += 0x4C
+0DD8: 4@ = read_mem_addr 4@ size 4 add_ib 0
+0DD0: 5@ = get_label_addr @_ZN12CAnimManager14BlendAnimationEP7RpClump12AssocGroupId11AnimationIdf
+0DD1: 5@ = get_func_addr_by_cstr_name 5@
+0DD3: context_set_reg 3 value 4.0
+0DD3: context_set_reg 2 value 144
+0DD3: context_set_reg 1 value 0
+0DD3: context_set_reg 0 value 4@
+0DD2: context_call_func 5@
+16@ = 0
+
+:MM15
+wait 0
+if
+03EE:   player _PLAYER_CHAR controllable 
+jf @MM15
+if
+8029:  not 16@ >= 150
+jf @MM16
+0DD0: 9@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 9@ = get_func_addr_by_cstr_name 9@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 9@
+0DD4: 9@ = context_get_reg 0
+9@ += 0x244
+0DD9: write_mem_addr 9@ value 12 size 4 add_ib 0 protect 0
+0DD9: write_mem_addr 0x0058A910 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90E value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8F8 value 16@ size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8F6 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FA value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FC value 0 size 2 add_ib 1 protect 0
+0171: set_player _PLAYER_CHAR z_angle_to 0@ 
+0DD0: 4@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 4@ = get_func_addr_by_cstr_name 4@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 4@
+0DD4: 4@ = context_get_reg 0
+4@ += 0x4C
+0DD8: 4@ = read_mem_addr 4@ size 4 add_ib 0
+0DD0: 5@ = get_label_addr @_ZN12CAnimManager14BlendAnimationEP7RpClump12AssocGroupId11AnimationIdf
+0DD1: 5@ = get_func_addr_by_cstr_name 5@
+0DD3: context_set_reg 3 value 100.0
+0DD3: context_set_reg 2 value 146
+0DD3: context_set_reg 1 value 0
+0DD3: context_set_reg 0 value 4@
+0DD2: context_call_func 5@
+
+:MM16
+wait 0
+03EE:   player _PLAYER_CHAR controllable 
+jf @MM16
+16@ /= 10
+01E4: text_1number_lowpriority 'HJ_IS' 16@ 1000 ms 1 
+0109: player _PLAYER_CHAR money += 16@ 
+16@ = 0
+jump @MM1
+
+:_ZN6CPools6GetPedEi
+hex
+ "_ZN6CPools6GetPedEi" 00
+end
+
+:_ZN12CAnimManager14BlendAnimationEP7RpClump12AssocGroupId11AnimationIdf
+hex
+ "_ZN12CAnimManager14BlendAnimationEP7RpClump12AssocGroupId11AnimationIdf" 00
+end

@@ -1,0 +1,229 @@
+{$CLEO .csa}
+thread 'POSE'
+//OriginalAuthor: Strike灬
+//本CLEO移植至罪吧吧主SK的MM Pose
+//Android by: XMDS 
+
+const
+ _PLAYER_CHAR = $303
+ _PLAYER_ACTOR = $304
+ _onmission = $616
+ pads = 0x0058A8EC
+end
+
+0DD6: 0@ = get_game_version
+if
+ 0@ <> 12
+jf @pose1
+end_thread
+ 
+:pose1
+wait 0
+04ED: load_animation 'POSE'
+0DE1: 0@ = get_touch_slide_state from 6 to 1 mintime 300 maxtime 1000
+if and
+0256:   player _PLAYER_CHAR defined 
+80DF:   not actor _PLAYER_ACTOR driving
+0@ == 1
+jf @pose1
+00BE: text_clear_all 
+01B4: set_player _PLAYER_CHAR frozen_state 0 
+01E3: text_1number_styled 'POSEM' number 6@ time 6000 style 6
+0DD0: 1@ = get_label_addr @_ZN6CWorld20bProcessCutsceneOnlyE
+0DD1: 1@ = get_func_addr_by_cstr_name 1@
+ 
+:pose2
+wait 0
+if
+00E1:   player 3 pressed_button 8
+jf @pose4
+wait 200
+00BE: text_clear_all 
+if
+ 6@ > 3
+jf @pose3
+6@ = -1
+
+:pose3
+wait 0
+6@ += 1
+01E3: text_1number_styled 'POSEM' number 6@ time 6000 style 6
+jump @pose6
+
+:pose4
+wait 0
+if
+00E1:   player 3 pressed_button 2
+jf @pose6
+wait 200
+00BE: text_clear_all 
+if
+ not 6@ >= 1
+jf @pose5
+6@ = 5
+
+:pose5
+wait 0
+6@ -= 1
+01E3: text_1number_styled 'POSEM' number 6@ time 6000 style 6 
+
+:pose6
+wait 0
+if
+00E1:   player 3 pressed_button 5
+jf @pose2
+01B4: set_player _PLAYER_CHAR frozen_state 1 
+if
+ 6@ == 0
+jf @pose7
+jump @pose1
+
+:pose7
+if
+ 6@ == 1
+jf @pose8
+7@ = 217
+8@ = 26
+jump @pose11
+
+:pose8
+if
+ 6@ == 2
+jf @pose9
+7@ = 216
+8@ = 26
+jump @pose11
+
+:pose9
+if
+ 6@ == 3
+jf @pose10
+7@ = 215
+8@ = 26
+jump @pose11
+
+:pose10
+if
+ 6@ == 4
+jf @pose1
+7@ = 218
+8@ = 26
+
+:pose11
+wait 0
+0DD0: 9@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 9@ = get_func_addr_by_cstr_name 9@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 9@
+0DD4: 9@ = context_get_reg 0
+9@ += 0x244
+0DD9: write_mem_addr 9@ value 12 size 4 add_ib 0 protect 0
+0DD9: write_mem_addr 0x0058A8F6 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8F8 value 16@ size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FA value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FC value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FE value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A900 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A902 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A906 value 0 size 2 add_ib 1 protect 0
+//0DD9: write_mem_addr 0x0058A908 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90A value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90C value 0 size 2 add_ib 1 protect 0
+//0DD9: write_mem_addr 0x0058A90E value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A910 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A912 value 0 size 2 add_ib 1 protect 0
+0DD0: 4@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 4@ = get_func_addr_by_cstr_name 4@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 4@
+0DD4: 4@ = context_get_reg 0
+4@ += 0x4C
+0DD8: 4@ = read_mem_addr 4@ size 4 add_ib 0
+0DD0: 5@ = get_label_addr @_ZN12CAnimManager14BlendAnimationEP7RpClump12AssocGroupId11AnimationIdf
+0DD1: 5@ = get_func_addr_by_cstr_name 5@
+0DD3: context_set_reg 3 value 4.0
+0DD3: context_set_reg 2 value 7@
+0DD3: context_set_reg 1 value 8@
+0DD3: context_set_reg 0 value 4@
+0DD2: context_call_func 5@
+if
+00E1:   player 0 pressed_button 17
+jf @pose13
+0DD0: 9@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 9@ = get_func_addr_by_cstr_name 9@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 9@
+0DD4: 9@ = context_get_reg 0
+9@ += 0x244
+0DD9: write_mem_addr 9@ value 12 size 4 add_ib 0 protect 0
+0DD9: write_mem_addr 0x0058A8F6 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8F8 value 16@ size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FA value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FC value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FE value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A900 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A902 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A906 value 0 size 2 add_ib 1 protect 0
+//0DD9: write_mem_addr 0x0058A908 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90A value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90C value 0 size 2 add_ib 1 protect 0
+//0DD9: write_mem_addr 0x0058A90E value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A910 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A912 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 1@ value 1 size 1 add_ib 0 protect 1
+wait 100
+
+:pose12
+wait 0
+0DD0: 9@ = get_label_addr @_ZN6CPools6GetPedEi
+0DD1: 9@ = get_func_addr_by_cstr_name 9@
+0DD3: context_set_reg 0 value _PLAYER_ACTOR
+0DD2: context_call_func 9@
+0DD4: 9@ = context_get_reg 0
+9@ += 0x244
+0DD9: write_mem_addr 9@ value 12 size 4 add_ib 0 protect 0
+0DD9: write_mem_addr 0x0058A8F6 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8F8 value 16@ size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FA value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FC value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A8FE value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A900 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A902 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A906 value 0 size 2 add_ib 1 protect 0
+//0DD9: write_mem_addr 0x0058A908 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90A value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A90C value 0 size 2 add_ib 1 protect 0
+//0DD9: write_mem_addr 0x0058A90E value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A910 value 0 size 2 add_ib 1 protect 0
+0DD9: write_mem_addr 0x0058A912 value 0 size 2 add_ib 1 protect 0
+0DE0: 0@ = get_touch_point_state 7 mintime 1000
+if
+ 0@ == 1
+jf @pose12
+0DD9: write_mem_addr 1@ value 0 size 1 add_ib 0 protect 1
+
+:pose13
+if
+00E1:   player 0 pressed_button 14
+jf @pose11
+0DD3: context_set_reg 3 value 4.0
+0DD3: context_set_reg 2 value 3
+0DD3: context_set_reg 1 value 0
+0DD3: context_set_reg 0 value 4@
+0DD2: context_call_func 5@
+jump @pose1
+
+:_ZN6CWorld20bProcessCutsceneOnlyE
+hex
+ "_ZN6CWorld20bProcessCutsceneOnlyE" 00
+end
+
+:_ZN6CPools6GetPedEi
+hex
+ "_ZN6CPools6GetPedEi" 00
+end
+
+:_ZN12CAnimManager14BlendAnimationEP7RpClump12AssocGroupId11AnimationIdf
+hex
+ "_ZN12CAnimManager14BlendAnimationEP7RpClump12AssocGroupId11AnimationIdf" 00
+end

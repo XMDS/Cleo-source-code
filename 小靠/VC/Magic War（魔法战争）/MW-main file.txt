@@ -1,0 +1,734 @@
+{$CLEO .cs}
+
+//-------------MAIN---------------
+
+
+
+03A4: name_thread 'JDC' 
+:JDC_0
+wait 0
+if
+player.Defined($player_char)
+jf @JDC_0 
+
+:JDC_2
+wait 0
+if 
+$ONMISSION == 0
+jf @JDC_3
+05F1:0@ = random_object_near_point -1163.803 -913.914 13.887 in_radius 4.0 find_next 0 //IF and SET
+if
+not 0@ == 0
+jf @JDC_4
+if
+00F6:   player $PLAYER_CHAR 0 -1163.803 -913.914 13.887 radius 1.4 1.8 1.5
+jf @JDC_2 
+0108: destroy_object 0@
+fade 0 500
+wait 500
+0209: 0@ = random_int_in_ranges 83 96
+0085: $PED 0@
+Model.Load(0@)  
+Model.Load(#M60) 
+Model.Load(#ANGEL)
+Model.Load(#BUDDYSHOT)
+Model.Load(#MP5LNG)
+Model.Load(#CHROMEGUN)
+038B: load_requested_models
+03B8: clear_weapons_from_player $PLAYER_CHAR 
+009A: 1@ = create_actor_pedtype 15 model 0@ at -1158.562 -1005.022 13.887
+01B2: give_actor 1@ weapon 19 ammo 9999 // Load the weapon model before using this
+01B2: give_actor $player_actor weapon 32 ammo 9999 // Load the weapon model before using this
+01B2: give_actor $player_actor weapon 25 ammo 9999 // Load the weapon model before using this    
+01B2: give_actor $player_actor weapon 21 ammo 9999 // Load the weapon model before using this   
+0446: set_actor 1@ dismemberment_possible 0 
+0223: set_actor 1@ health_to 100000
+04D7: lock_actor 1@ in_current_position 1
+01B4: set_player $PLAYER_CHAR frozen_state 0
+0223: set_actor $player_actor health_to 999
+0390: load_txd_dictionary 'YUGIOH' // never used in VC or GTA 3 
+038F: load_texture 'DY' as 81 // Load dictionary with 0390 first 
+038F: load_texture 'SWJLH' as 82 // Load dictionary with 0390 first 
+038F: load_texture 'SHBD' as 83 // Load dictionary with 0390 first 
+038F: load_texture 'BZ' as 84 // Load dictionary with 0390 first 
+038F: load_texture 'SWSF' as 85 // Load dictionary with 0390 first 
+038F: load_texture 'DR' as 86 // Load dictionary with 0390 first 
+fade 1 500
+wait 500
+jump @JDC_5
+
+
+
+:JDC_3
+wait 0
+if
+not 0@ == 0
+jf @JDC_2
+0108: destroy_object 0@
+jump @JDC_2
+
+:JDC_4
+Model.Load(361)
+0107: 0@ = create_object 361 at -1163.803 -913.914 13.887
+jump @JDC_2 
+
+:JDC_5  //Hajime
+$ONMISSION = 100
+01B4: set_player $PLAYER_CHAR frozen_state 1
+wait 2000
+01CB: actor 1@ kill_actor $player_actor
+04D7: lock_actor 1@ in_current_position 0
+5@ = 2.0
+05DF: write_memory 1234566 size 1 value 1 virtual_protect 1 
+05DF: write_memory 7654567 size 1 value 40 virtual_protect 1 
+
+
+
+:JDC_6
+wait 100
+gosub @DECHK
+gosub @HITCH
+gosub @PSCHK
+gosub @HICHK
+gosub @HEALO
+0291: set_actor 1@ attack_when_provoked 1 
+01CB: actor 1@ kill_actor $player_actor
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 5@ 0.0 
+02CE: 4@ = ground_z 2@ 3@ 4@
+00A1: put_actor 1@ at 2@ 3@ 4@
+gosub @KLCHK
+020F: actor 1@ look_at_player $PLAYER_CHAR 
+05E0: 16@ = read_memory 1234567 size 1 virtual_protect 0   
+05E0: 7@ = read_memory 7654321 size 1 virtual_protect 0  
+if
+not 7@ == 1
+jf @CHK
+if
+not 7@ == 3
+jf @CHK2
+gosub @PDZCH
+wait 0
+if 
+not 9@ == 1
+jf @DZ
+if 
+not 17@ >= 30000
+jf @DZ
+05DF: write_memory 1234565 size 1 value 0 virtual_protect 1
+jump @JDC_6
+
+
+:HITCH
+17@ += 1
+if 
+not $ONMISSION >= 1000
+jf @HITCHz
+$ONMISSION += 1
+
+:HITCHz
+return
+
+:KLCHK
+04C4: create_coordinate 2@ 3@ 4@ from_actor $player_actor offset 0.0 0.0 0.0 
+04C4: create_coordinate 11@ 4@ &123 from_actor 1@ offset 0.0 0.0 0.0 
+0509: 5@ = distance_between_point 11@ 4@ and_point 2@ 3@
+5@ /= 10.0
+if
+5@ >= 2.4
+jf @HITCHz
+0502: unknown_actor 1@ sprint_to 2@ 3@
+return
+
+:HEALO
+0226: 0@ = actor 1@ health
+0@ /= 1000 
+05DF: write_memory 9999999 size 1 value 0@ virtual_protect 0
+return
+
+
+
+:DZ
+if
+not 9@ == 1
+jf @DZZ
+0209: 8@ = random_int_in_ranges 0 5
+15@ = 0 
+if
+031D:   actor 1@ hit_by_weapon 25
+jf @DZZ
+8@ = 5
+
+:DZZ
+05DF: write_memory 1234565 size 1 value 1 virtual_protect 1
+if
+not 8@ == 0
+jf @DZ0
+if
+not 8@ == 1
+jf @DZ1
+if
+not 8@ == 2
+jf @DZ2
+if  
+not 8@ == 3
+jf @DZ3
+if
+not 8@ == 4
+jf @DZ4
+if 
+not 8@ == 5
+jf @DZ5
+if
+not 8@ == 6
+jf @DZ
+jump @DZ 
+
+:DZ0
+if
+not 15@ == 80
+jf @DZ00
+15@ = 81
+03CF: load_wav 'TAX1_2' as 1 
+gosub @YJTZ_8571 
+gosub @LOGO
+
+:DZ00
+9@ = 1
+jump @KS
+
+:DZ1
+if
+not 15@ == 80
+jf @DZ11
+15@ = 82
+03CF: load_wav 'TAX1_2' as 1 
+gosub @YJTZ_8571 
+gosub @LOGO
+
+:DZ11
+9@ = 1
+jump @D9
+
+:DZ2
+if
+not 15@ == 80
+jf @DZ22
+15@ = 83
+03CF: load_wav 'TAX1_2' as 1 
+gosub @YJTZ_8571 
+gosub @LOGO
+
+:DZ22
+9@ = 1
+jump @SD
+
+:DZ3
+if
+not 15@ == 80
+jf @DZ33
+15@ = 84
+03CF: load_wav 'TAX1_2' as 1 
+gosub @YJTZ_8571 
+gosub @LOGO
+
+:DZ33
+9@ = 1
+jump @BZ
+
+:DZ4
+if
+not 15@ == 80
+jf @DZ44
+15@ = 85
+03CF: load_wav 'TAX1_2' as 1 
+gosub @YJTZ_8571 
+gosub @LOGO
+
+:DZ44
+9@ = 1
+jump @SF
+
+:DZ5
+if
+not 15@ == 80
+jf @DZ55
+15@ = 86
+03CF: load_wav 'TAX1_2' as 1 
+gosub @YJTZ_8571 
+gosub @LOGO
+
+:DZ55
+9@ = 1
+jump @DR
+
+:LOGO
+wait 0
+015D: set_gamespeed 0.00001
+14@ += 1
+if 
+not 14@ >= 60
+jf @LOER
+05DF: write_memory 1234568 size 1 value 1 virtual_protect 1
+05DF: write_memory 10554184 size 4 value 1 virtual_protect 0
+05E0: 12@ = read_memory 10550532 size 2 virtual_protect 0 
+05E0: 13@ = read_memory 10550536 size 2 virtual_protect 0
+008D: 12@ 12@
+008D: 13@ 13@
+12@ /= 2.0
+13@ /= 2.0
+038D: draw_texture 15@ position 12@ 13@ size 400.0 400.0 RGBA 255 255 255 190 // never used in VC or GTA 3
+03F0: enable_text_draw 0 
+JUMP @LOGO
+
+:LOER
+015D: set_gamespeed 1.0
+15@ = 80
+05DF: write_memory 1234568 size 1 value 0 virtual_protect 1
+05DF: write_memory 10554184 size 4 value 0 virtual_protect 0 
+return
+
+
+
+
+:KS
+wait 0
+if
+17@ >= 1000
+jf @GY
+17@ -= 1300
+00A0: store_actor 1@ position_to 2@ 3@ 4@
+0337: set_actor 1@ visibility 0
+0437: scatter_particle 23 2.0 at 2@ 3@ 4@ 0.0 0.0 0.0
+0226: 6@ = actor 1@ health
+6@ += 400
+0223: set_actor 1@ health_to 6@
+0208: 2@ = random_float -1180.51 -1132.51
+0208: 3@ = random_float -914.518 -1057.52
+020C: create_explosion_with_radius 11 at  2@ 3@ 4@
+010D: set_player $PLAYER_CHAR wanted_level_to 6
+jump @JDC_6
+
+:D9
+wait 0
+5@ = 10.0
+015D: set_gamespeed 0.1
+02AB: set_actor 1@ immunities BP 1 FP 1 EP 1 CP 1 MP 1
+00A0: store_actor 1@ position_to 2@ 3@ 4@
+020C: create_explosion_with_radius 10 at 2@ 3@ 4@
+6@ += 1
+if
+not 6@ == 9
+jf @GY
+jump @JDC_6
+
+:SD
+wait 0
+05DF: write_memory 1234568 size 1 value 1 virtual_protect 0
+0054: store_player $PLAYER_CHAR position_to 2@ 3@ 4@
+02CF: 0@ = create_fire_at 2@ 3@ 4@
+0054: store_player $PLAYER_CHAR position_to 2@ 3@ 4@
+wait 2000
+02D1: destroy_fire 0@
+020C: create_explosion_with_radius 7 at 2@ 3@ 4@ 
+020C: create_explosion_with_radius 1 at 2@ 3@ 4@
+05DF: write_memory 1234568 size 1 value 0 virtual_protect 0
+jump @GY
+
+
+:BZ
+ wait 0
+ if
+17@ >= 1000
+jf @GY
+17@ -= 600
+00A0: store_actor 1@ position_to 2@ 3@ 4@
+0437: scatter_particle 13 5.0 at 2@ 3@ 4@ 0.0 0.0 0.0
+ 054A: set_actor 1@ can_be_shot_in_a_car 0
+ 02AB: set_actor 1@ immunities BP 0 FP 0 EP 1 CP 0 MP 0 
+ 0467: set_actor 1@ clear_last_weapon_damage 
+5@ *= 5.0
+jump @JDC_6
+
+:SF
+wait 0
+ if
+17@ >= 1000
+jf @GY
+17@ -= 900
+05DF: write_memory 1234568 size 1 value 1 virtual_protect 1
+01B9: set_actor $player_actor armed_weapon_to 0 
+054A: set_actor 1@ can_be_shot_in_a_car 0
+04D7: lock_actor $PLAYER_ACTOR in_current_position 1
+5@ = 0
+0350: set_actor 1@ maintain_position_when_attacked 1  
+jump @JDC_6
+
+:DR
+wait 0
+ if
+17@ >= 1000
+jf @GY
+17@ -= 3600
+015D: set_gamespeed 0.1
+0172: 6@ = actor 1@ z_angle
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 2.2 0.0 
+00A5: 0@ = create_car #ANGEL at 2@ 3@ 4@
+0175: set_car 0@ z_angle_to 6@
+0224: set_car 0@ health_to 0
+04BA: set_car 0@ speed_instantly 400.0
+01C3: remove_references_to_car 0@ 
+jump @JDC_6
+
+
+
+:GY
+05DF: write_memory 1234568 size 1 value 0 virtual_protect 1
+0350: set_actor 1@ maintain_position_when_attacked 0
+010D: set_player $PLAYER_CHAR wanted_level_to 0 
+015D: set_gamespeed 1.0
+02AB: set_actor 1@ immunities BP 0 FP 0 EP 0 CP 0 MP 0
+0337: set_actor 1@ visibility 255
+054A: set_actor 1@ can_be_shot_in_a_car 1
+04D7: lock_actor $player_actor in_current_position 0
+01CB: actor 1@ kill_actor $player_actor
+14@ = 0
+15@ = 0
+17@ = 0
+6@ = 0
+9@ = 0
+if
+not 0@ == 555
+jf @CHK_Z
+0@ = 0
+jump @JDC_6
+
+:CHK_X
+if
+not 0@ == 555
+jf @CHK_Z
+0@ = 0
+jump @JDC_6 
+
+:CHK_Z
+return
+
+:CHK
+gosub @PDZCH
+0@ = 555
+gosub @GY
+0@ = 0
+wait 100
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 0.0 0.0 
+020C: create_explosion_with_radius 1 at 2@ 3@ 4@ 
+wait 100
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 0.0 0.0 
+020C: create_explosion_with_radius 10 at 2@ 3@ 4@
+wait 100
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 0.0 0.0 
+020C: create_explosion_with_radius 10 at 2@ 3@ 4@ 
+wait 100
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 0.0 0.0 
+020C: create_explosion_with_radius 10 at 2@ 3@ 4@ 
+wait 100
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 0.0 0.0 
+020C: create_explosion_with_radius 11 at 2@ 3@ 4@
+wait 100
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 0.0 0.0 
+020C: create_explosion_with_radius 11 at 2@ 3@ 4@
+wait 100
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 0.0 0.0 
+020C: create_explosion_with_radius 7 at 2@ 3@ 4@
+jump @JDC_6
+
+:CHK2
+gosub @PDZCH
+0@ = 555
+gosub @GY
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 0.0 0.0 
+020C: create_explosion_with_radius 10 at 2@ 3@ 4@ 
+JUMP @JDC_6
+
+:PSCHK
+wait 0
+0085: 0@ $player_actor
+04C4: create_coordinate 2@ 3@ 4@ from_actor $player_actor offset 0.0 0.0 0.0
+if
+2@ >= -1189.51
+jf @PSEX1
+if
+not 2@ >= -1127.51
+jf @PSEX2
+if
+3@ >= -1063.52
+jf @PSEY1
+if
+not 3@ >= -909.518
+jf @PSEY2
+0085: 0@ 1@
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 0.0 0.0
+if
+2@ >= -1189.51
+jf @PSEX1
+if
+not 2@ >= -1127.51
+jf @PSEX2
+if
+3@ >= -1063.52
+jf @PSEY1
+if
+not 3@ >= -909.518
+jf @PSEY2
+if or
+4@ >= 25.0
+not 4@ >= 10.0
+jf @CHK_Z 
+00A1: put_actor 1@ at 2@ 3@ 20.0
+return
+
+:PSEX1
+00A1: put_player 0@ at -1179.51 3@ 4@
+return 
+
+
+:PSEX2
+00A1: put_player 0@ at -1132.51 3@ 4@
+return
+
+:PSEY1
+00A1: put_player 0@ at 2@ -1057.52 4@ 
+return
+
+:PSEY2
+00A1: put_player 0@ at 2@ -914.518 4@
+return
+
+:DECHK
+wait 0
+0226: 0@ = actor $PLAYER_ACTOR  health 
+if
+0@ == 0
+jf @DECHK2
+jump @OVE
+
+ 
+
+
+:DECHK2
+wait 0
+0226: 0@ = actor 1@ health 
+if
+0@ == 0
+jf @CHK_Z
+
+:OVE
+0@ = 555
+gosub @GY
+gosub @WINORNOT
+01C2: remove_references_to_actor 1@// Like turning an actor into a random pedestrian
+0249: release_model #M60
+0249: release_model #BUDDYSHOT
+0249: release_model #MP5LNG
+0249: release_model #ANGEL
+0249: release_model #CHROMEGUN
+0249: release_model $PED
+0@ = 0
+1@ = 0
+2@ = 0
+3@ = 0
+4@ = 0
+5@ = 0
+6@ = 0
+7@ = 0
+8@ = 0
+9@ = 0
+10@ = 0
+11@ = 0
+12@ = 0
+13@ = 0
+14@ = 0
+15@ = 0
+16@ = 0
+17@ = 0
+$ONMISSION = 0
+$PED = 0
+05DF: write_memory 1234566 size 1 value 0 virtual_protect 1
+05DF: write_memory 7654567 size 1 value 0 virtual_protect 1  
+jump @JDC_0
+
+:WINORNOT
+0226: 0@ = actor 1@ health 
+if
+not 0@ == 0
+jf @WIN
+jump @LOSE
+
+:WIN
+01E3: text_1number_styled 'M_PASS' number 1000000 time 5000 style 1  // MISSION PASSED! $~1~
+0109: player $PLAYER_CHAR money += 1000000
+jump @CHK_Z
+
+:LOSE
+00BA: text_styled 'M_FAIL' 5000 ms 1  // MISSION FAILED!
+0109: player $PLAYER_CHAR money += -1000000
+jump @CHK_Z
+
+
+:HICHK
+wait 0
+if
+831D:   actor 1@ hit_by_weapon 32 
+jf @60BAK
+if
+831D:   actor 1@ hit_by_weapon 21
+jf @BDBAK
+if
+831D:   actor 1@ hit_by_weapon 25
+jf @P5BAK
+return
+
+:60BAK
+0226: 2@ = actor $PLAYER_ACTOR health
+2@ += 1
+0223: set_actor $PLAYER_ACTOR health_to 2@ 
+return
+
+:BDBAK 
+04C4: create_coordinate 2@ 3@ 4@ from_actor 1@ offset 0.0 0.0 0.0
+020C: create_explosion_with_radius 9 at 2@ 3@ 4@
+return
+
+:P5BAK
+if
+not $ONMISSION >= 1000
+jf @CHK_Z
+$ONMISSION += 4
+return
+
+:PDZCH
+05E0: 7@ = read_memory 7654321 size 1 virtual_protect 0 
+if or
+7@ == 1
+7@ == 3
+7@ == 4
+7@ == 5
+7@ == 6
+jf @CHK_Z
+if
+not 7@ == 1
+jf @PDZ1
+if
+not 7@ == 3
+jf @PDZ3
+if
+not 7@ == 4
+jf @PDZ4
+if
+not 7@ == 5
+jf @PDZ5
+if
+not 7@ == 6
+jf @PDZ6
+return
+
+:PDZ1
+15@ = 71
+14@ = 0
+03CF: load_wav 'TAX1_2' as 1 
+gosub @YJTZ_8571 
+jump @LOGON
+
+:PDZ3
+15@ = 73
+14@ = 0
+03CF: load_wav 'TAX1_2' as 1 
+gosub @YJTZ_8571 
+jump @LOGON
+
+
+:PDZ4
+15@ = 74
+14@ = 0
+03CF: load_wav 'TAX1_2' as 1 
+gosub @YJTZ_8571 
+jump @LOGON
+
+:PDZ5
+15@ = 75
+14@ = 0
+03CF: load_wav 'TAX1_2' as 1 
+gosub @YJTZ_8571 
+jump @LOGON
+
+:PDZ6
+15@ = 76
+14@ = 0
+03CF: load_wav 'TAX1_2' as 1 
+gosub @YJTZ_8571 
+jump @LOGON
+
+
+:LOGON
+wait 0
+015D: set_gamespeed 0.00001
+14@ += 1
+if 
+not 14@ >= 60
+jf @LOERN
+05DF: write_memory 1234568 size 1 value 1 virtual_protect 1
+05DF: write_memory 10554184 size 4 value 1 virtual_protect 0
+05E0: 12@ = read_memory 10550532 size 2 virtual_protect 0 
+05E0: 13@ = read_memory 10550536 size 2 virtual_protect 0
+008D: 12@ 12@
+008D: 13@ 13@
+12@ /= 2.0
+13@ /= 2.0
+038D: draw_texture 15@ position 12@ 13@ size 400.0 400.0 RGBA 255 255 255 190 // never used in VC or GTA 3
+03F0: enable_text_draw 0 
+JUMP @LOGON
+
+:LOERN
+015D: set_gamespeed 1.0
+15@ = 0
+05DF: write_memory 1234568 size 1 value 0 virtual_protect 1
+05DF: write_memory 10554184 size 4 value 0 virtual_protect 0 
+return
+
+:YJTZ_8571
+wait 0 
+if 
+03D0:   wav 1 loaded 
+jf @YJTZ_8600 
+
+:YJTZ_8590
+wait 0 
+03D1: play_wav 1 
+return 
+
+:YJTZ_8600
+wait 0 
+if 
+83D0:   not wav 1 loaded 
+jf @YJTZ_8590 
+wait 0 
+if 
+   not Player.Defined($PLAYER_CHAR)
+jf @YJTZ_8600 
+return 
+
+
+
+
+ 
+
+
+  
+
+
+ 
+ 
+
+
+
+
+  
+

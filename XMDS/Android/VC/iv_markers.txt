@@ -1,0 +1,12 @@
+{$CLEO .csa}
+0000:
+//OriginalAuthor: ThirteenAG
+//05DF: write_memory 5705257 size 5 value 144 virtual_protect 1 
+//05DF: write_memory 5704640 size 4 value -1869574000 virtual_protect 1 
+//05DF: write_memory 5704783 size 2 value 37008 virtual_protect 1 
+//05DF: write_memory 5704765 size 5 value 144 virtual_protect 1 
+
+//Android by: XMDS
+0DD9: write_mem_addr 0x001F17C8 value 0xBF00BF00 size 4 add_ib 1 protect 1 //Disable Matrix Update
+0DD9: write_mem_addr 0x001F1B38 value 0xBF00BF00 size 4 add_ib 1 protect 1 //Disable 3DMarkers Corona function
+end_thread

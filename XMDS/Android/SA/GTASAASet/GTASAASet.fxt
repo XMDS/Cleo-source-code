@@ -1,0 +1,43 @@
+SASET0 GTASAASetv1.0 by: XMDS
+
+//文件不存在。请检查XMDS文件夹或者GTASA.ini文件是否存在。
+SASET01 file does not exist. Please check if the XMDS folder or the GTASA.ini file exists.
+
+//文件读取失败。请检查GTASA.ini文件是否有内容。
+SASET02 File read failed. Please check if the GTASA.ini file has content.
+
+SASET03 The key name "Activate" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET04 The key name "Version" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET05 The key name "DelayedReading" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET06 The key name "MemoryAvailable" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET07 The key name "onFrameLimit" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET08 The key name "offMaxFrame" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET09 The key name "GameSpeed" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET10 The key name "GameSound" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET11 The key name "DrawCrossHairs" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET12 The key name "Cheats" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET13 The key name "CleoMenu" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET14 The key name "TrafficDensity" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET15 The key name "PedestriansDensity" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET16 The key name "AllVehiclesRadio" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET17 The key name "AircraftHeightLimit" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET18 The key name "JetpacksHeightLimit" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET19 The key name "SeasUndergroundDepth" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.
+
+SASET20 The key name "CoronasIntensityMult" or "=" read failed. Please check if it exists. Or whether the order is arranged correctly.

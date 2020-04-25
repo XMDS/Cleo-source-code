@@ -1,0 +1,67 @@
+// This file was decompiled using VCSCM.ini published by GTAMods.com on 2019-10-19
+{$CLEO .cs}
+
+//-------------MAIN---------------
+0000: NOP 
+05E5: 0@ = game_version 
+00D6: if 
+0039:   0@ == 0 // @ == int 
+004D: jump_if_false @Noname_305 
+05E0: 1@ = read_memory 6241818 size 2 virtual_protect 1 
+00D6: if 
+0039:   1@ == 13153 // @ == int 
+004D: jump_if_false @Noname_165 
+05DF: write_memory 5215390 size 4 value 6271504 virtual_protect 1 
+05DF: write_memory 5477091 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5477194 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5475425 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5475312 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5215718 size 4 value 6181296 virtual_protect 1 
+05DF: write_memory 5215398 size 4 value 6212028 virtual_protect 1 
+0002: jump @Noname_298 
+
+:Noname_165
+05E0: 2@ = read_memory 6868940 size 2 virtual_protect 1 
+00D6: if 
+0039:   2@ == 25462 // @ == int 
+004D: jump_if_false @Noname_298 
+05DF: write_memory 5519946 size 4 value 6903920 virtual_protect 1 
+05DF: write_memory 5822718 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5822834 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5824675 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5824781 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5520274 size 4 value 6807944 virtual_protect 1 
+05DF: write_memory 5519954 size 4 value 6908576 virtual_protect 1 
+
+:Noname_298
+0002: jump @Noname_578 
+
+:Noname_305
+05E0: 1@ = read_memory 6241570 size 2 virtual_protect 1 
+00D6: if 
+0039:   1@ == 13153 // @ == int 
+004D: jump_if_false @Noname_445 
+05DF: write_memory 5215614 size 4 value 6270968 virtual_protect 1 
+05DF: write_memory 5475888 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5476001 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5477667 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5477770 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5215942 size 4 value 6181296 virtual_protect 1 
+05DF: write_memory 5215622 size 4 value 6212028 virtual_protect 1 
+0002: jump @Noname_578 
+
+:Noname_445
+05E0: 2@ = read_memory 6868940 size 2 virtual_protect 1 
+00D6: if 
+0039:   2@ == 25462 // @ == int 
+004D: jump_if_false @Noname_578 
+05DF: write_memory 5519978 size 4 value 6903920 virtual_protect 1 
+05DF: write_memory 5822750 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5822866 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5824707 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5824813 size 1 value 116 virtual_protect 1 
+05DF: write_memory 5520306 size 4 value 6807944 virtual_protect 1 
+05DF: write_memory 5519984 size 4 value 6908576 virtual_protect 1 
+
+:Noname_578
+05DC: end_custom_thread 

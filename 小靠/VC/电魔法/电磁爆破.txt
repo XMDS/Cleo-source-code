@@ -1,0 +1,145 @@
+// This file was decompiled using VCSCM.ini published by GTAMods.com on 2019-10-19
+{$CLEO .cs}
+
+//-------------MAIN---------------
+03A4: name_thread 'FLASHB' 
+
+:FLASHB_10
+0001: wait 0 ms 
+00D6: if 
+0256:   player $PLAYER_CHAR defined 
+004D: jump_if_false @FLASHB_10 
+0247: request_model 6001 
+0247: request_model 6002 
+0247: request_model 6003 
+0247: request_model 6004 
+0247: request_model 6005 
+0247: request_model 6006 
+038B: load_requested_models 
+
+:FLASHB_62
+0001: wait 200 ms 
+00D6: if 
+85EE:   not key_pressed 52 //VK_... 
+004D: jump_if_false @FLASHB_89 
+0002: jump @FLASHB_62 
+
+:FLASHB_89
+0001: wait 0 ms 
+00D6: if 
+0256:   player $PLAYER_CHAR defined 
+004D: jump_if_false @FLASHB_89 
+03CF: load_wav 'BAR_1' as 1 
+00D6: if 
+03D0:   wav 1 loaded 
+004D: jump_if_false @FLASHB_263 
+
+:FLASHB_136
+0001: wait 0 ms 
+03D1: play_wav 1 
+0007: 5@ = 0.0 // @ = float 
+0007: 6@ = 0.0 // @ = float 
+04C4: create_coordinate 1@ 2@ 3@ from_actor $PLAYER_ACTOR offset 0.0 14.0 -10.0 
+009A: 7@ = create_actor_pedtype 4 model #PGA at 1@ 2@ 3@ 
+0172: 8@ = actor $PLAYER_ACTOR z_angle 
+02AB: set_actor 7@ immunities BP 1 FP 1 EP 1 CP 1 MP 1 
+04D7: lock_actor 7@ in_current_position 1 
+0173: set_actor 7@ z_angle_to 8@ 
+0337: set_actor 7@ visibility 0 
+0002: jump @FLASHB_298 
+
+:FLASHB_263
+00D6: if 
+83D0:   not wav 1 loaded 
+004D: jump_if_false @FLASHB_136 
+0001: wait 0 ms 
+00D6: if 
+8256:   not player $PLAYER_CHAR defined 
+004D: jump_if_false @FLASHB_263 
+
+:FLASHB_298
+0006: 4@ = 6000 // @ = int 
+
+:FLASHB_306
+0001: wait 20 ms 
+0050: gosub @FLASHB_623 
+000B: 5@ += 0.2 // @ += float 
+000F: 6@ -= 0.2 // @ -= float 
+00D6: if 
+8031:   not  5@ >= 4.0 // @ >= float 
+004D: jump_if_false @FLASHB_751 
+04C4: create_coordinate 1@ 2@ 3@ from_actor 7@ offset 5@ 5@ 9.0 
+0050: gosub @FLASHB_713 
+0107: 10@ = create_object 4@ at 1@ 2@ 3@ 
+0050: gosub @FLASHB_972 
+0050: gosub @FLASHB_713 
+0107: 11@ = create_object 4@ at 1@ 2@ 3@ 
+04C4: create_coordinate 1@ 2@ 3@ from_actor 7@ offset 6@ 5@ 9.0 
+0050: gosub @FLASHB_713 
+0107: 12@ = create_object 4@ at 1@ 2@ 3@ 
+0050: gosub @FLASHB_972 
+0050: gosub @FLASHB_713 
+0107: 13@ = create_object 4@ at 1@ 2@ 3@ 
+0007: TIMERB = 9.0 // @ = float 
+0059: TIMERB += 5@ // $ += $ float 
+04C4: create_coordinate 1@ 2@ 3@ from_actor 7@ offset 0.0 5@ TIMERB 
+0050: gosub @FLASHB_713 
+0107: 14@ = create_object 4@ at 1@ 2@ 3@ 
+0050: gosub @FLASHB_972 
+0050: gosub @FLASHB_713 
+0107: 15@ = create_object 4@ at 1@ 2@ 3@ 
+0002: jump @FLASHB_306 
+
+:FLASHB_623
+00D6: if and
+8039:   not  10@ == 0 // @ == int 
+8039:   not  11@ == 0 // @ == int 
+8039:   not  12@ == 0 // @ == int 
+8039:   not  13@ == 0 // @ == int 
+8039:   not  14@ == 0 // @ == int 
+8039:   not  15@ == 0 // @ == int 
+004D: jump_if_false @FLASHB_749 
+0108: destroy_object 10@ 
+0108: destroy_object 11@ 
+0108: destroy_object 12@ 
+0108: destroy_object 13@ 
+0108: destroy_object 14@ 
+0108: destroy_object 15@ 
+0002: jump @FLASHB_749 
+
+:FLASHB_713
+000A: 4@ += 1 // @ += int 
+00D6: if 
+8029:   not  4@ >= 6006 // @ >= int 
+004D: jump_if_false @FLASHB_741 
+0051: return 
+
+:FLASHB_741
+0006: 4@ = 6001 // @ = int 
+
+:FLASHB_749
+0051: return 
+
+:FLASHB_751
+04C4: create_coordinate 1@ 2@ 3@ from_actor 7@ offset 5@ 5@ 9.0 
+020C: create_explosion 5 at 1@ 2@ 3@ 
+04C4: create_coordinate 1@ 2@ 3@ from_actor 7@ offset 6@ 5@ 9.0 
+020C: create_explosion 5 at 1@ 2@ 3@ 
+04C4: create_coordinate 1@ 2@ 3@ from_actor 7@ offset 0.0 5@ TIMERB 
+020C: create_explosion 5 at 1@ 2@ 3@ 
+04C4: create_coordinate 1@ 2@ 3@ from_actor 7@ offset 0.0 0.0 9.0 
+020C: create_explosion 4 at 1@ 2@ 3@ 
+009B: destroy_actor_instantly 7@ 
+040D: unload_wav 1 
+00D6: if and
+810F:   not player $PLAYER_CHAR wanted_level > 0 
+0548:   player $PLAYER_CHAR check_for_ped_model #COP #ARMY radius 30.0 30.0 30.0 
+004D: jump_if_false @FLASHB_62 
+010D: set_player $PLAYER_CHAR wanted_level_to 1 
+0002: jump @FLASHB_62 
+
+:FLASHB_972
+000F: 1@ -= 0.4 // @ -= float 
+000F: 2@ -= 0.4 // @ -= float 
+000F: 3@ -= 0.4 // @ -= float 
+0051: return 

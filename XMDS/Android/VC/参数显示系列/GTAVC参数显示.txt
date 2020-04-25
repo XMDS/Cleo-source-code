@@ -1,0 +1,119 @@
+{$CLEO .csa}
+jump @XM_CSXS
+
+:1
+wait 0
+0DD6: 5@ = get_game_version
+if
+5@ == 2
+jf @version107
+gosub @text
+045A: text_draw_1number 310.0 435.0 'XMCS103' 5@ 
+03F0: enable_text_draw 0
+jump @2
+
+:version107
+if
+5@ == 12
+jf @1
+gosub @text
+045A: text_draw_1number 310.0 435.0 'XMCS107' 5@ 
+03F0: enable_text_draw 0
+jump @2
+
+:2
+0DD0: 0@ = get_label_addr @XMDS_ZN12CMenuManager14m_PrefsShowFpsE
+0@ += 4
+0DD1: 0@ = get_func_addr_by_cstr_name 0@
+0DD9: write_mem_addr 0@ value 1 size 4 add_ib 0 protect 1
+0054: store_player 0 position_to 1@ 2@ 3@ 
+0170: 4@ = player 0 z_angle 
+0DD0: 6@ = get_label_addr @XMDS_ZN11CPopulation20PedDensityMultiplierE
+6@ += 4
+0DD1: 6@ = get_func_addr_by_cstr_name 6@
+0DD8: 6@ = read_mem_addr 6@ size 4 add_ib 0
+0DD0: 7@ = get_label_addr @XMDS_ZN8CCarCtrl20CarDensityMultiplierE
+7@ += 4
+0DD1: 7@ = get_func_addr_by_cstr_name 7@
+0DD8: 7@ = read_mem_addr 7@ size 4 add_ib 0
+0DD7: 8@ = get_image_base // android
+008C: 1@ = float_to_integer 1@ 
+gosub @text
+045A: text_draw_1number 10.0 435.0 'XMCSXS1' 1@ 
+03F0: enable_text_draw 0
+008C: 2@ = float_to_integer 2@ 
+gosub @text
+045A: text_draw_1number 90.0 435.0 'XMCSXS2' 2@ 
+03F0: enable_text_draw 0
+008C: 3@ = float_to_integer 3@ 
+gosub @text
+045A: text_draw_1number 170.0 435.0 'XMCSXS3' 3@ 
+03F0: enable_text_draw 0
+008C: 4@ = float_to_integer 4@ 
+gosub @text
+045A: text_draw_1number 220.0 435.0 'XMCSXS4' 4@ 
+03F0: enable_text_draw 0
+0087: 10@ = 6@ // floating-point values only
+10@ *= 10.0
+008C: 10@ = float_to_integer 10@
+0085: 9@ = 10@ // integer values and handles
+9@ /= 10
+9@ *= 10
+0066: 10@ -= 9@ // integer values (never used VC or GTA 3)
+9@ /= 10 
+gosub @text
+045B: text_draw_2numbers 390.0 435.0 'XMCSXS6' 9@ 10@ 
+03F0: enable_text_draw 0
+0087: 12@ = 7@ // floating-point values only
+12@ *= 10.0
+008C: 12@ = float_to_integer 12@
+0085: 11@ = 12@ // integer values and handles
+11@ /= 10
+11@ *= 10
+0066: 12@ -= 11@ // integer values (never used VC or GTA 3)
+11@ /= 10 
+gosub @text
+045B: text_draw_2numbers 470.0 435.0 'XMCSXS7' 11@ 12@ 
+03F0: enable_text_draw 0
+gosub @text
+045A: text_draw_1number 540.0 435.0 'XMCSXS8' 8@ 
+03F0: enable_text_draw 0
+jump @1
+
+:text
+0341: set_text_draw_align_justify 1 
+0348: set_text_draw_proportional 1
+03E4: set_text_draw_align_right 0 
+0343: set_text_linewidth 648.0 
+0342: set_text_draw_centered 0 
+0345: set_text_draw_in_box 0
+0340: set_text_draw_color 255 86 170 255 
+033F: set_text_draw_letter_width_height 0.6 1.2
+return 
+
+:XMDS_ZN12CMenuManager14m_PrefsShowFpsE
+hex
+"XMDS_ZN12CMenuManager14m_PrefsShowFpsE" 00
+end
+
+:XMDS_ZN11CPopulation20PedDensityMultiplierE
+hex
+"XMDS_ZN11CPopulation20PedDensityMultiplierE" 00
+end
+
+:XMDS_ZN8CCarCtrl20CarDensityMultiplierE
+hex
+"XMDS_ZN8CCarCtrl20CarDensityMultiplierE" 00
+end 
+
+:XM_CSXS
+thread 'XM_CSXS'
+jump @1
+
+hex
+06 00 00 00
+end
+
+hex
+"__SBFTR" 00
+end

@@ -1,0 +1,155 @@
+{$CLEO .csa}
+0000:
+//for: https://github.com/GTAmodding/FramerateVigilante 
+0DD0: 15@ = get_label_addr @_ZN6CTimer12ms_fTimeStepE
+0DD1: 15@ = get_func_addr_by_cstr_name 15@ 
+0@ = 50.0
+float 0@ /= 30.0
+0DD8: 1@ = read_mem_addr 15@ size 4 add_ib 0
+float 1@ /= 0@
+float 2@ = 1@
+float 3@ = 1@
+float 4@ = 1@
+1@ *= 30.0
+3@ *= 0.9
+
+0DD6: 10@ = get_game_version
+if
+ 10@ == 12 //1.06/1.07
+then
+
+ //SkimmerResistanceFix
+ 0DD9: write_mem_addr 0x003A5E9C value 1@ size 4 add_ib 1 protect 0 //fSeaPlaneWaterResistance
+
+ //CarWheelOnRailsSpinFix
+ 0DD9: write_mem_addr 0x0024380C value 0xBF00BF00 size 4 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00243810 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00243812 value 0x7A08EDDF size 4 add_ib 1 protect 1 //VLDR  S15, [pc, #32]
+ 0DD9: write_mem_addr 0x00243834 value 2@ size 4 add_ib 1 protect 0
+
+ //CarSlowDownSpeedFix
+ 0DD9: write_mem_addr 0x00243974 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x0024397A value 0xBF00BF00 size 4 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x0024397E value 0xAACDED9F size 4 add_ib 1 protect 1 //VLDR S20, [pc, #0x334]
+ 0DD9: write_mem_addr 0x00243CB4 value 3@ size 4 add_ib 1 protect 0
+ 0DD9: write_mem_addr 0x00243D7E value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00243D84 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00243D86 value 0xAA1EED9F size 4 add_ib 1 protect 1 //VLDR S20, [pc, #0x78]
+ 0DD9: write_mem_addr 0x00243D8A value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00243E00 value 3@ size 4 add_ib 1 protect 0
+ 0DD9: write_mem_addr 0x00243D92 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00243DA8 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00243DAA value 0xAA15ED9F size 4 add_ib 1 protect 1 //VLDR S20, [pc, #0x54]
+ 0DD9: write_mem_addr 0x00243DAE value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+
+ //BikeSlowDownSpeedFix
+ 0DD9: write_mem_addr 0x0024407A value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00244080 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00244082 value 0xAAC7EDDF size 4 add_ib 1 protect 1 //VLDR S21, [pc, #0x31C]
+ 0DD9: write_mem_addr 0x002443A0 value 3@ size 4 add_ib 1 protect 0
+ 0DD9: write_mem_addr 0x002443E6 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x002443EC value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x002443EE value 0xAA1AEDDF size 4 add_ib 1 protect 1 //VLDR S21, [pc, #0x68]
+ 0DD9: write_mem_addr 0x002443F8 value 0xBF00BF00 size 4 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00244410 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00244412 value 0xAA11EDDF size 4 add_ib 1 protect 1 //VLDR S21, [pc, #0x44]
+ 0DD9: write_mem_addr 0x00244416 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+ 0DD9: write_mem_addr 0x00244458 value 3@ size 4 add_ib 1 protect 0
+
+
+ //HeliRotorIncreaseSpeedFix
+ while true
+      repeat
+       wait 0
+       0DD8: 15@ = read_mem_addr 0x002405C8 size 4 add_ib 1 //6.28
+       float 15@
+       float 14@ = 15@
+       float 13@ = 15@
+      15@ /= 13.0
+      15@ *= 4@
+      0DD9: write_mem_addr 0x002405C4 value 15@ size 4 add_ib 1 protect 1
+     until if Player.IsInAnyHeli(0)
+     
+       repeat
+        wait 0
+       until if pad.IsButtonPressed(0,15)     
+        float 14@ *= 4@
+        0DD9: write_mem_addr 0x002405C8 value 14@ size 4 add_ib 1 protect 0
+        
+          repeat
+           wait 0
+          until if not Player.IsInAnyHeli(0)
+           0DD9: write_mem_addr 0x002405C8 value 13@ size 4 add_ib 1 protect 0
+ end
+
+
+else
+   if
+    10@ == 16 //1.09
+   then
+
+    //SkimmerResistanceFix
+
+    0DD9: write_mem_addr 0x003C5EC0 value 1@ size 4 add_ib 1 protect 0 //fSeaPlaneWaterResistance
+
+    //CarWheelOnRailsSpinFix
+    0DD9: write_mem_addr 0x002584EC value 0xBF00BF00 size 4 add_ib 1 protect 1 //NOP
+    0DD9: write_mem_addr 0x002584F0 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+    0DD9: write_mem_addr 0x002584F2 value 0x7A08ED9F size 4 add_ib 1 protect 1 //VLDR  S14, [pc, #32]
+    0DD9: write_mem_addr 0x00258514 value 2@ size 4 add_ib 1 protect 0
+
+    //CarSlowDownSpeedFix
+
+    0DD9: write_mem_addr 0x00258906 value 0xBF00BF00 size 4 add_ib 1 protect 1 //NOP
+    0DD9: write_mem_addr 0x0025890E value 0x6A3AEDDF size 4 add_ib 1 protect 1 //VLDR S13, [pc, #0xE8] 
+    0DD9: write_mem_addr 0x002589F8 value 3@ size 4 add_ib 1 protect 0
+    0DD9: write_mem_addr 0x00258ADA value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+    0DD9: write_mem_addr 0x00258AE0 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+    0DD9: write_mem_addr 0x00258AE2 value 0xAA1EED9F size 4 add_ib 1 protect 1 //VLDR S20, [pc, #0x78]
+    0DD9: write_mem_addr 0x00258B5C value 3@ size 4 add_ib 1 protect 0
+    0DD9: write_mem_addr 0x00258AEC value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+    0DD9: write_mem_addr 0x00258AF6 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+    0DD9: write_mem_addr 0x00258AFC value 0x6A17EDDF size 4 add_ib 1 protect 1 //VLDR S13, [pc, #0x5C]
+    //BikeSlowDownSpeedFix
+    0DD9: write_mem_addr 0x00258E02 value 0xBF00BF00 size 4 add_ib 1 protect 1 //NOP
+    0DD9: write_mem_addr 0x00258E0A value 0x7A37ED9F size 4 add_ib 1 protect 1 //VLDR S14, [pc, #0xDC]
+    0DD9: write_mem_addr 0x00258EE8 value 3@ size 4 add_ib 1 protect 0
+    0DD9: write_mem_addr 0x00259164 value 0xBF00 size 2 add_ib 1 protect 1 //NOP 
+    0DD9: write_mem_addr 0x0025916A value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+    0DD9: write_mem_addr 0x0025916C value 0xAA20EDDF size 4 add_ib 1 protect 1 //VLDR S21, [pc, #0x80]
+    0DD9: write_mem_addr 0x00259176 value 0xBF00 size 2 add_ib 1 protect 1 //NOP 
+    0DD9: write_mem_addr 0x00259180 value 0xBF00 size 2 add_ib 1 protect 1 //NOP
+    0DD9: write_mem_addr 0x00259186 value 0x7A1AED9F size 4 add_ib 1 protect 1 //VLDR S14, [pc, #0x68]
+    0DD9: write_mem_addr 0x002591F0 value 3@ size 4 add_ib 1 protect 0
+
+    //HeliRotorIncreaseSpeedFix
+    while true
+          repeat
+           wait 0
+           0DD8: 15@ = read_mem_addr 0x00255004 size 4 add_ib 1 //6.28
+           float 15@
+           float 14@ = 15@
+           float 13@ = 15@
+           15@ /= 13.0
+           15@ *= 4@
+           0DD9: write_mem_addr 0x00255000 value 15@ size 4 add_ib 1 protect 1
+          until if Player.IsInAnyHeli(0)
+           
+            repeat
+             wait 0
+            until if pad.IsButtonPressed(0,15)
+             float 14@ *= 4@
+             0DD9: write_mem_addr 0x00255004 value 14@ size 4 add_ib 1 protect 0
+             
+               repeat
+                wait 0
+               until if not Player.IsInAnyHeli(0)
+                0DD9: write_mem_addr 0x00255004 value 13@ size 4 add_ib 1 protect 0
+    end
+   end
+end 
+
+:_ZN6CTimer12ms_fTimeStepE
+hex
+ "_ZN6CTimer12ms_fTimeStepE" 00
+end
